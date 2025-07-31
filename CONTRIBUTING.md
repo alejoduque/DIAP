@@ -5,7 +5,7 @@
  ██║  ██║ ██╔══██║ ██╔═══╝  ██╔═══╝ 
  ██████╔╝ ██║  ██║ ██║      ██║     
  ╚═════╝  ╚═╝  ╚═╝ ╚═╝      ╚═╝     
-> *"Ninguna especie vive sola, ninguna tecnología es neutral, ninguna red es solo humana."*
+*"Ninguna especie vive sola, ninguna tecnología es neutral, ninguna red es solo humana."*
 ```
 # 🤝 Contribuir a DApp
 
