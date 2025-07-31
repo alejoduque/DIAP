@@ -81,7 +81,7 @@ Estamos buscando:
 ## 📬 Contacto
 
 Si quieres colaborar, pilotear o aportar, escríbenos a:  
-**[tu-email@ejemplo.com]**  
+**[alejoduque@gmail.com]**  
 o abre un Issue en este repositorio.
 
 ---
