@@ -5,6 +5,7 @@
  ██║  ██║ ██╔══██║ ██╔═══╝  ██╔═══╝ 
  ██████╔╝ ██║  ██║ ██║      ██║     
  ╚═════╝  ╚═╝  ╚═╝ ╚═╝      ╚═╝     
+> *"Ninguna especie vive sola, ninguna tecnología es neutral, ninguna red es solo humana."*
 ```
 # 🤝 Contribuir a DApp
 
@@ -55,6 +56,4 @@ Queremos que cualquier contribución (código, diseño, documentación, organiza
 
 ## 📬 Contacto
 
-Si quieres colaborar o aportar, escríbenos a: **[alejoduque@gmail.com]**  
-
-> *"Ninguna especie vive sola, ninguna tecnología es neutral, ninguna red es solo humana."*
+Si quieres colaborar o aportar, escríbenos a: **[alejoduque@gmail.com]**
