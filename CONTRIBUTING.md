@@ -53,9 +53,8 @@ Queremos que cualquier contribución (código, diseño, documentación, organiza
 3. Si tienes una idea, mejora o propuesta, crea un Issue con una descripción clara.
 4. Si quieres unirte al desarrollo o a un piloto territorial, contáctanos por correo.
 
----
+## 📬 Contacto
+
+Si quieres colaborar o aportar, escríbenos a: **[alejoduque@gmail.com]**  
 
 > *"Ninguna especie vive sola, ninguna tecnología es neutral, ninguna red es solo humana."*
-
-
-
