@@ -55,14 +55,7 @@ Queremos que cualquier contribución (código, diseño, documentación, organiza
 
 ---
 
-## 🐚 En lugar de "ownership", pensamos en custodios
-
-DApp no tiene dueños.  
-Tiene **cuidadorxs, custodios temporales**, como tú, que creen en otro modo de habitar la tecnología.
-
----
-
 > *"Ninguna especie vive sola, ninguna tecnología es neutral, ninguna red es solo humana."*
 
-Gracias por sumarte.
+
 
