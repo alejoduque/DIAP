@@ -80,7 +80,7 @@ Estamos buscando:
 
 ## 📬 Contacto
 
-Si quieres colaborar, pilotear o aportar, escríbenos a: **[alejoduque@gmail.com]**  
+Si quieres participar y aportar, escríbenos a: **[alejoduque@gmail.com]**  
 o abre un Issue en este repositorio.
 
 ---
