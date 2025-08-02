@@ -3,17 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Presentación dApp Token Ambiental</title>
+    <title>Presentación DApp - Token Ambiental</title>
     <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
     <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        body { 
-            margin: 0; 
-            padding: 20px; 
-            background: #0f172a; 
-            font-family: system-ui, -apple-system, sans-serif; 
+        body {
+            margin: 0;
+            padding: 20px;
+            background: #3e3b36;
+            font-family: system-ui, -apple-system, sans-serif;
         }
     </style>
 </head>
@@ -23,7 +23,7 @@
     <script type="text/babel">
         const { useState, useEffect } = React;
         const { createRoot } = ReactDOM;
-        
+
         // Create simple icon components using HTML entities
         const ChevronLeft = () => React.createElement('span', { className: "text-xl font-bold" }, '◀');
         const ChevronRight = () => React.createElement('span', { className: "text-xl font-bold" }, '▶');
@@ -39,8 +39,8 @@
           const diapositivas = [
             {
               id: 1,
-              title: "Arquitectura de la dApp de Token Ambiental",
-              subtitle: "Sistema de Incentivos Basado en Blockchain para la Sostenibilidad",
+              title: "Arquitectura de una [D]App para conservación y restauración ambiental",
+              subtitle: "Sistema de Incentivos Basado en Blockchain para la sostenibilidad",
               content: React.createElement('div', { className: "h-full flex flex-col justify-center" },
                 React.createElement('div', { className: "flex flex-col items-center space-y-8" },
                   React.createElement('div', { className: "grid grid-cols-3 gap-6 w-full max-w-5xl" },
