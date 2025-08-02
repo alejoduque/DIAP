@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Retícula de Consenso Parlamentario</title>
+  <style>
+    body {
+      background: linear-gradient(135deg, #0f2027 0%, #2c5364 100%);
+      margin: 0;
+      font-family: 'Futura', sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      color: #fff;
+      min-height: 100vh;
+      justify-content: center;
+    }
+    svg {
+      max-width: 600px;
+      max-height: 600px;
+    }
+    .controls {
+      display: flex;
+      flex-direction: column;
+      width: 100%;
+      max-width: 500px;
+      padding: 1rem;
+      gap: 0.8rem;
+    }
+    label {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 14px;
+    }
+    input[type="range"] {
+      width: 60%;
+    }
+    .info {
+      text-align: center;
+      margin-top: 1rem;
+      font-size: 12px;
+      opacity: 0.7;
+    }
+    .osc-status {
+      text-align: center;
+      margin-bottom: 1rem;
+      font-size: 11px;
+      opacity: 0.6;
+    }
+    .value-display {
+      min-width: 35px;
+      text-align: right;
+      font-family: monospace;
+      font-size: 12px;
+    }
+  </style>
+  <link href="https://fonts.googleapis.com/css2?family=Futura&display=swap" rel="stylesheet">
+</head>
+<body>
+  <svg id="reticuleSVG" viewBox="0 0 600 600" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <radialGradient id="coolGrad1" cx="50%" cy="50%" r="50%">
+        <stop offset="0%" style="stop-color:#0f2027" />
+        <stop offset="100%" style="stop-color:#2c5364" />
+      </radialGradient>
+      <filter id="glow1">
+        <feGaussianBlur stdDeviation="4" result="coloredBlur" />
+        <feMerge>
+          <feMergeNode in="coloredBlur" />
+          <feMergeNode in="SourceGraphic" />
+        </feMerge>
+      </filter>
+      <filter id="seatGlow">
+        <feGaussianBlur stdDeviation="2" result="coloredBlur" />
+        <feMerge>
+          <feMergeNode in="coloredBlur" />
+          <feMergeNode in="SourceGraphic" />
+        </feMerge>
+      </filter>
+      <linearGradient id="dynamicTint" x1="0%" y1="0%" x2="100%" y2="0%">
+        <stop offset="0%" stop-color="#ff6b6b" stop-opacity="0.08" />
+        <stop offset="25%" stop-color="#ade8f4" stop-opacity="0.08" />
+        <stop offset="50%" stop-color="#56cfe1" stop-opacity="0.08" />
+        <stop offset="100%" stop-color="#80ed99" stop-opacity="0.08" />
+      </linearGradient>
+    </defs>
+    
+
+    
+    <g transform="translate(300,300)">
+      <!-- Círculos concéntricos -->
+      <g stroke="#8ecae6" stroke-opacity="0.4" fill="none" stroke-width="1.2">
+        <circle r="54" />
+        <circle r="80" />
+        <circle r="108" />
+        <circle r="134" />
+        <circle r="162" />
+        <circle r="188" />
+        <circle r="216" />
+      </g>
+      
+      <!-- Líneas cruzadas -->
+      <g stroke="#219ebc" stroke-opacity="0.3" stroke-width="1.2">
+        <line x1="0" y1="-216" x2="0" y2="216" />
+        <line x1="-216" y1="0" x2="216" y2="0" />
+        <line x1="-152" y1="-152" x2="152" y2="152" />
+        <line x1="152" y1="-152" x2="-152" y2="152" />
+      </g>
+      
+      <!-- Escaños parlamentarios -->
+      <g id="parliamentarySeats"></g>
+      
+      <!-- Forma central que se transforma -->
+      <g>
+        <polygon id="spinner" fill="url(#dynamicTint)" stroke="#fff" stroke-width="1.8" filter="url(#glow1)"></polygon>
+      </g>
+      
+      <!-- Etiquetas -->
+      <text x="0" y="-252" fill="#ff6b6b" font-size="19" text-anchor="middle">GENÉTICO</text>
+      <text x="0" y="270" fill="#80ed99" font-size="19" text-anchor="middle">ECOSISTEMA</text>
+      <text x="270" y="0" fill="#56cfe1" font-size="19" text-anchor="middle" transform="rotate(90 270 0)">ESPECIES</text>
+      <text x="-270" y="0" fill="#ade8f4" font-size="17" text-anchor="middle" transform="rotate(-90 -270 0)">CONECTIVIDAD</text>
+      
+      <!-- Etiquetas internas -->
+      <text x="0" y="-198" fill="#fff" font-size="14" text-anchor="middle">MICROBIOS</text>
+      <text x="134" y="-134" fill="#fff" font-size="14" text-anchor="middle">ANIMALES</text>
+      <text x="198" y="0" fill="#fff" font-size="14" text-anchor="middle">PLANTAS</text>
+      <text x="134" y="134" fill="#fff" font-size="14" text-anchor="middle">HÁBITATS</text>
+      <text x="0" y="198" fill="#fff" font-size="14" text-anchor="middle">FUNCIÓN</text>
+      <text x="-134" y="134" fill="#fff" font-size="14" text-anchor="middle">CONECTIVIDAD</text>
+      <text x="-198" y="0" fill="#fff" font-size="14" text-anchor="middle">ESTRUCTURA</text>
+      <text x="-134" y="-134" fill="#fff" font-size="14" text-anchor="middle">MOVIMIENTO</text>
+    </g>
+  </svg>
+
+  <div class="controls">
+    <label>
+      Espinas 
+      <input type="range" id="spikeRange" min="0" max="100" value="40" />
+      <span class="value-display" id="spikeValue">40</span>
+    </label>
+    <label>
+      Opacidad 
+      <input type="range" id="opacityRange" min="0" max="127" value="10" />
+      <span class="value-display" id="opacityValue">10</span>
+    </label>
+    <label>
+      Velocidad de Pulso 
+      <input type="range" id="speedRange" min="1" max="127" value="60" />
+      <span class="value-display" id="speedValue">60</span>
+    </label>
+    <label>
+      Onda de Consenso 
+      <input type="range" id="consensusRange" min="1" max="127" value="38" />
+      <span class="value-display" id="consensusValue">38</span>
+    </label>
+    <label>
+      Intensidad de Escaños 
+      <input type="range" id="intensityRange" min="1" max="127" value="25" />
+      <span class="value-display" id="intensityValue">25</span>
+    </label>
+  </div>
+  
+  <div class="info">
+    Los escaños parlamentarios brillan según ondas de consenso simuladas a través del marco ecológico
+  </div>
+
+  <div class="osc-status" id="oscStatus">OSC: Desconectado | Puerto de entrada: 8080 | Puerto de salida: 9090</div>
+
+  <script>
+    const polygon = document.getElementById("spinner");
+    const seatsContainer = document.getElementById("parliamentarySeats");
+    const spikeRange = document.getElementById("spikeRange");
+    const opacityRange = document.getElementById("opacityRange");
+    const speedRange = document.getElementById("speedRange");
+    const consensusRange = document.getElementById("consensusRange");
+    const intensityRange = document.getElementById("intensityRange");
+    const oscStatus = document.getElementById("oscStatus");
+
+    // OSC Configuration
+    let oscSocket = null;
+    let oscConnected = false;
+    const OSC_INPUT_PORT = 8080;
+    const OSC_OUTPUT_PORT = 9090;
+    const OSC_HOST = 'localhost';
+
+    // Control mappings for OSC (0-127 range)
+    const controls = {
+      '/spike': { element: spikeRange, valueDisplay: document.getElementById('spikeValue'), scale: 100/127 },
+      '/opacity': { element: opacityRange, valueDisplay: document.getElementById('opacityValue'), scale: 1 },
+      '/speed': { element: speedRange, valueDisplay: document.getElementById('speedValue'), scale: 126/127 },
+      '/consensus': { element: consensusRange, valueDisplay: document.getElementById('consensusValue'), scale: 126/127 },
+      '/intensity': { element: intensityRange, valueDisplay: document.getElementById('intensityValue'), scale: 126/127 }
+    };
+
+    let currentPoints = [];
+    let seats = [];
+    let time = 0;
+
+    // OSC WebSocket setup
+    function initOSC() {
+      try {
+        // Note: This would typically require a WebSocket-to-OSC bridge
+        // For demonstration, we'll simulate OSC capability
+        oscStatus.textContent = `OSC: Simulado | Puerto de entrada: ${OSC_INPUT_PORT} | Puerto de salida: ${OSC_OUTPUT_PORT}`;
+        
+        // Simulate incoming OSC messages
+        setInterval(() => {
+          if (Math.random() < 0.1) { // 10% chance per interval
+            const addresses = Object.keys(controls);
+            const randomAddress = addresses[Math.floor(Math.random() * addresses.length)];
+            const randomValue = Math.floor(Math.random() * 128);
+            handleOSCMessage(randomAddress, randomValue);
+          }
+        }, 1000);
+      } catch (error) {
+        oscStatus.textContent = `OSC: Error - ${error.message}`;
+      }
+    }
+
+    // Handle incoming OSC messages
+    function handleOSCMessage(address, value) {
+      if (controls[address]) {
+        const control = controls[address];
+        const scaledValue = Math.round(value * control.scale);
+        control.element.value = address === '/opacity' ? value : scaledValue;
+        control.valueDisplay.textContent = value;
+        
+        // Update visual immediately
+        updateControls();
+      }
+    }
+
+    // Send OSC message (simulated)
+    function sendOSCMessage(address, value) {
+      console.log(`OSC OUT: ${address} ${value}`);
+      // In a real implementation, this would send via WebSocket to OSC bridge
+    }
+
+    // Update value displays and send OSC
+    function updateControls() {
+      Object.entries(controls).forEach(([address, control]) => {
+        const element = control.element;
+        const rawValue = parseInt(element.value);
+        let oscValue;
+        
+        if (address === '/opacity') {
+          oscValue = rawValue;
+        } else if (address === '/spike') {
+          oscValue = Math.round(rawValue / control.scale);
+        } else {
+          oscValue = Math.round(rawValue / control.scale) + 1;
+        }
+        
+        control.valueDisplay.textContent = oscValue;
+      });
+    }
+
+    // Add event listeners for manual control
+    Object.entries(controls).forEach(([address, control]) => {
+      control.element.addEventListener('input', (e) => {
+        const rawValue = parseInt(e.target.value);
+        let oscValue;
+        
+        if (address === '/opacity') {
+          oscValue = rawValue;
+        } else if (address === '/spike') {
+          oscValue = Math.round(rawValue / control.scale);
+        } else {
+          oscValue = Math.round(rawValue / control.scale) + 1;
+        }
+        
+        control.valueDisplay.textContent = oscValue;
+        sendOSCMessage(address, oscValue);
+      });
+    });
+
+    // Generate parliamentary seats on concentric circles
+    function generateSeats() {
+      const radii = [54, 80, 108, 134, 162, 188, 216];
+      const seatCounts = [12, 18, 24, 30, 36, 42, 48];
+      
+      seats = [];
+      
+      radii.forEach((radius, ringIndex) => {
+        const count = seatCounts[ringIndex];
+        const angleStep = (Math.PI * 2) / count;
+        
+        for (let i = 0; i < count; i++) {
+          const angle = i * angleStep;
+          const x = Math.cos(angle) * radius;
+          const y = Math.sin(angle) * radius;
+          
+          const seat = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+          seat.setAttribute("cx", x);
+          seat.setAttribute("cy", y);
+          seat.setAttribute("r", "2.4");
+          seat.setAttribute("fill", "#fff");
+          seat.setAttribute("filter", "url(#seatGlow)");
+          
+          seatsContainer.appendChild(seat);
+          seats.push({
+            element: seat,
+            x: x,
+            y: y,
+            angle: angle,
+            radius: radius,
+            ring: ringIndex
+          });
+        }
+      });
+    }
+
+    function generateStarPoints(spike = 40) {
+      const base = 135;
+      const newPoints = [];
+      for (let i = 0; i < 8; i++) {
+        const angle = (Math.PI * 2 * i) / 8;
+        const variation = base + (Math.random() - 0.5) * spike * 2;
+        const x = Math.cos(angle) * variation;
+        const y = Math.sin(angle) * variation;
+        newPoints.push({ x, y });
+      }
+      return newPoints;
+    }
+
+    function interpolatePoints(p1, p2, t) {
+      return p1.map((pt, i) => {
+        return {
+          x: pt.x + (p2[i].x - pt.x) * t,
+          y: pt.y + (p2[i].y - pt.y) * t
+        };
+      });
+    }
+
+    function pointsToString(pts) {
+      return pts.map(p => `${p.x.toFixed(2)},${p.y.toFixed(2)}`).join(" ");
+    }
+
+    function updateSeatConsensus() {
+      const consensusSpeed = (parseInt(consensusRange.value) + 1) / 127 * 5;
+      const intensity = (parseInt(intensityRange.value) + 1) / 127 * 3;
+      
+      seats.forEach((seat, index) => {
+        // Create multiple chaotic interference patterns
+        const chaos1 = Math.sin(seat.angle * 3.7 + time * consensusSpeed * 0.031) * 0.4 + 0.6;
+        const chaos2 = Math.cos(seat.radius * 0.023 + time * consensusSpeed * 0.047) * 0.3 + 0.7;
+        const chaos3 = Math.sin(index * 0.13 + time * consensusSpeed * 0.019) * 0.25 + 0.75;
+        
+        // Ring-specific oscillations with different frequencies
+        const ringOsc = Math.sin(seat.ring * 1.2 + time * consensusSpeed * 0.041) * 0.35 + 0.65;
+        
+        // Position-based noise
+        const posNoise = Math.sin(seat.x * 0.017 + seat.y * 0.023 + time * consensusSpeed * 0.033) * 0.3 + 0.7;
+        
+        // Individual seat randomness with slower evolution
+        const seatChaos = Math.sin(index * 2.7 + time * consensusSpeed * 0.008) * 0.4 + 0.6;
+        
+        // Combine with non-linear interactions
+        const consensus = (chaos1 * chaos2 + chaos3 * ringOsc + posNoise * seatChaos) / 3 * intensity;
+        
+        // More varied color calculation
+        const hue = ((seat.ring * 51 + seat.angle * 57 + time * consensusSpeed * 0.7) % 360);
+        const saturation = 50 + consensus * 45;
+        const lightness = 25 + consensus * 60;
+        
+        seat.element.setAttribute("fill", `hsl(${hue}, ${saturation}%, ${lightness}%)`);
+        seat.element.setAttribute("opacity", 0.2 + consensus * 0.8);
+        
+        const size = 1.2 + consensus * 1.3;
+        seat.element.setAttribute("r", size);
+      });
+    }
+
+    let targetPoints = generateStarPoints();
+    currentPoints = targetPoints.map(p => ({ ...p }));
+    let tick = 0;
+
+    function animate() {
+      const spikeVal = parseFloat(spikeRange.value);
+      const opacityVal = parseInt(opacityRange.value) / 127;
+      const speedVal = parseInt(speedRange.value) + 1;
+
+      time++;
+      tick++;
+      
+      if (tick % (128 - speedVal) === 0) {
+        targetPoints = generateStarPoints(spikeVal);
+      }
+
+      currentPoints = interpolatePoints(currentPoints, targetPoints, 0.03);
+      polygon.setAttribute("points", pointsToString(currentPoints));
+      polygon.setAttribute("fill-opacity", opacityVal);
+      
+      updateSeatConsensus();
+
+      requestAnimationFrame(animate);
+    }
+
+    // Initialize
+    generateSeats();
+    updateControls();
+    initOSC();
+    animate();
+  </script>
+</body>
+</html>
