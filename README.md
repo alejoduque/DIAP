@@ -1,14 +1,14 @@
 ```bash
 
- ██████╗   █████╗  ██████╗  ██████╗ 
- ██╔══██╗ ██╔══██╗ ██╔══██╗ ██╔══██╗
- ██║  ██║ ███████║ ██████╔╝ ██████╔╝
- ██║  ██║ ██╔══██║ ██╔═══╝  ██╔═══╝ 
- ██████╔╝ ██║  ██║ ██║      ██║     
- ╚═════╝  ╚═╝  ╚═╝ ╚═╝      ╚═╝     
+ ██████╗  ██╗  █████╗  ██████╗ 
+ ██╔══██╗ ██║ ██╔══██╗ ██╔══██╗
+ ██║  ██║ ██║ ███████║ ██████╔╝
+ ██║  ██║ ██║ ██╔══██║ ██╔═══╝ 
+ ██████╔╝ ██║ ██║  ██║ ██║     
+ ╚═════╝  ╚═╝ ╚═╝  ╚═╝ ╚═╝     
 ```
 
-# 🌱 DApp: Plataforma descentralizada para la regeneración comunitaria
+# 🌱 DiAp: Plataforma descentralizada para la regeneración comunitaria
 
 Es una aplicación descentralizada diseñada para facilitar procesos de **gobernanza colectiva**, **conservación de ecosistemas** y **restauración territorial**, a través de una DAO (Organización Autónoma Descentralizada) implementada sobre tecnologías blockchain sostenibles como **Hedera Hashgraph** o **Algorand (via AlgoKit)**.
 
@@ -16,7 +16,7 @@ Es una aplicación descentralizada diseñada para facilitar procesos de **gobern
 
 ## 🧠 Concepto base
 
-DApp combina herramientas tecnológicas y metodologías participativas para que comunidades locales, aliadas técnicas y organismos ambientales puedan:
+DiAp combina herramientas tecnológicas y metodologías participativas para que comunidades locales, aliadas técnicas y organismos ambientales puedan:
 
 - 🏞️ **Cuidar y restaurar territorios** mediante acciones verificables
 - 🗳️ **Tomar decisiones colectivas** a través de una DAO abierta y modular
