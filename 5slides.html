@@ -8,6 +8,10 @@
     <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="modules/slideGenerator.js"></script>
+    <script src="modules/htmlParser.js"></script>
+    <script src="modules/markdownParser.js"></script>
+    <script src="modules/slideLoader.js"></script>
     <style>
         body {
             margin: 0;
@@ -35,8 +39,9 @@
 
         const DiapositivasDePresentacion = () => {
           const [diapositivaActual, setDiapositivaActual] = useState(0);
+          const [loading, setLoading] = useState(true);
 
-          const diapositivas = [
+          const [diapositivas, setDiapositivas] = useState([
             {
               id: 1,
               title: "Arquitectura de una [D]App para conservación y restauración ambiental",
@@ -439,7 +444,7 @@
               diapositivas[diapositivaActual].content
             ),
             React.createElement('div', { className: "bg-stone-800 p-4 flex justify-between items-center" },
-              React.createElement('button', { 
+              React.createElement('button', {
                 onClick: diapositivaAnterior,
                 className: "flex items-center px-4 py-2 bg-green-800 hover:bg-green-700 text-green-100 rounded-lg transition-colors",
                 disabled: diapositivaActual === 0
@@ -448,7 +453,7 @@
                 React.createElement('span', { className: "ml-2" }, "Anterior")
               ),
               React.createElement('div', { className: "flex space-x-2" },
-                diapositivas.map((_, index) => 
+                diapositivas.map((_, index) =>
                   React.createElement('button', {
                     key: index,
                     onClick: () => setDiapositivaActual(index),
@@ -456,7 +461,7 @@
                   })
                 )
               ),
-              React.createElement('button', { 
+              React.createElement('button', {
                 onClick: siguienteDiapositiva,
                 className: "flex items-center px-4 py-2 bg-green-800 hover:bg-green-700 text-green-100 rounded-lg transition-colors",
                 disabled: diapositivaActual === diapositivas.length - 1
