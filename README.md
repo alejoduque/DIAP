@@ -1,3 +1,10 @@
+![Alt text]([https://raw.githubusercontent.com/wkrouse/Bringing-My-OCD-Online/Gif/1st.gif](https://raw.githubusercontent.com/alejoduque/DIAP/refs/heads/master/Simulacion_Biotokens.gif))
+
+
+
+
+![Alt text](https://raw.githubusercontent.com/alejoduque/DIAP/refs/heads/master/Simulacion_Biotokens.gif)
+
 ```bash
 
  ██████╗  ██╗  █████╗  ██████╗ 
