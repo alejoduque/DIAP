@@ -1,0 +1,459 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Bioacoustic Tokenization — Interactive Flow + Code (Fixed MetaMask)</title>
+  <style>
+    :root{--bg:#0b1220;--card:#0f1724;--muted:#9aa4b2;--accent:#00d1b2}
+    html,body{height:100%;margin:0;background:var(--bg);color:#e6eef6;font-family:Inter,Segoe UI,system-ui,Roboto,Arial}
+    .wrap{max-width:1200px;margin:24px auto;padding:20px}
+    header{display:flex;align-items:center;gap:16px}
+    h1{margin:0;font-size:20px}
+    .grid{display:grid;grid-template-columns:1fr 380px;gap:16px;margin-top:18px}
+    .canvas{background:linear-gradient(180deg,#071025 0%, #071827 100%);border-radius:12px;padding:18px;border:1px solid rgba(255,255,255,0.04)}
+    .card{background:var(--card);padding:12px;border-radius:10px;border:1px solid rgba(255,255,255,0.03)}
+    .legend{font-size:13px;color:var(--muted)}
+    .tooltip{position:fixed;right:24px;top:24px;width:360px;max-height:78vh;overflow:auto;background:#071621;border-radius:12px;padding:12px;border:1px solid rgba(255,255,255,0.04);box-shadow:0 8px 30px rgba(2,6,23,0.8)}
+    .node{cursor:pointer}
+    pre{background:#02101a;padding:10px;border-radius:8px;overflow:auto;color:#dff7e6;font-size:12px}
+    .node-label{font-size:13px}
+    .small{font-size:12px;color:var(--muted)}
+    button.close{background:transparent;border:0;color:#9fbecf;cursor:pointer;font-size:14px}
+    .controls{display:flex;gap:8px;margin-bottom:10px}
+    .search{flex:1;padding:8px;border-radius:8px;border:1px solid rgba(255,255,255,0.03);background:#071218;color:#dfeffb}
+    .btn{padding:8px 12px;border-radius:8px;border:1px solid rgba(255,255,255,0.06);background:transparent;color:#dff7e6;cursor:pointer}
+    .muted{color:var(--muted)}
+    .walletStatus{font-size:13px;margin-top:8px}
+    .diag{font-size:12px;color:#cfe8ff;margin-top:8px}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <svg width="36" height="36" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M3 12h4l3 8 4-16 3 8h4" stroke="#00d1b2" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <div>
+        <h1>Interactive — Bioacoustic Tokenization Engine (line-art)</h1>
+        <div class="small">Click any node to view the corrected code snippet and explanation. Hover to see a short tooltip.</div>
+      </div>
+    </header>
+
+    <div class="grid">
+      <div class="canvas card" id="svgContainer">
+        <!-- Inline SVG diagram (fixed: & escaped) -->
+        <svg id="diagram" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 720" width="100%" height="520">
+          <defs>
+            <marker id="arrow" markerWidth="10" markerHeight="10" refX="10" refY="5" orient="auto">
+              <path d="M0 0 L10 5 L0 10 z" fill="#000" />
+            </marker>
+          </defs>
+
+          <g class="node" data-node="ingest">
+            <rect x="36" y="96" width="220" height="140" rx="8" ry="8" stroke="#000" stroke-width="1.6" fill="none"/>
+            <text x="146" y="124" font-size="13" font-weight="700" text-anchor="middle">1. Ingest / Recorder</text>
+          </g>
+
+          <g class="node" data-node="preprocess">
+            <rect x="296" y="86" width="220" height="160" rx="8" ry="8" stroke="#000" stroke-width="1.6" fill="none"/>
+            <text x="406" y="114" font-size="13" font-weight="700" text-anchor="middle">2. Preprocessing</text>
+          </g>
+
+          <g class="node" data-node="feature">
+            <rect x="556" y="66" width="220" height="100" rx="8" ry="8" stroke="#000" stroke-width="1.6" fill="none"/>
+            <text x="666" y="88" font-size="12" font-weight="700" text-anchor="middle">3a. Feature Extraction</text>
+          </g>
+
+          <g class="node" data-node="metadata">
+            <rect x="556" y="186" width="220" height="100" rx="8" ry="8" stroke="#000" stroke-width="1.6" fill="none"/>
+            <text x="666" y="208" font-size="12" font-weight="700" text-anchor="middle">3b. Metadata &amp; Geo</text>
+          </g>
+
+          <g class="node" data-node="scoring">
+            <rect x="836" y="136" width="220" height="160" rx="8" ry="8" stroke="#000" stroke-width="1.6" fill="none"/>
+            <text x="946" y="164" font-size="13" font-weight="700" text-anchor="middle">4. Scoring Aggregator</text>
+          </g>
+
+          <g class="node" data-node="token">
+            <rect x="1116" y="166" width="140" height="140" rx="8" ry="8" stroke="#000" stroke-width="1.6" fill="none"/>
+            <text x="1186" y="194" font-size="12" font-weight="700" text-anchor="middle">5. Tokenization Engine</text>
+          </g>
+
+          <g class="node" data-node="storage">
+            <rect x="1116" y="16" width="140" height="120" rx="8" ry="8" stroke="#000" stroke-width="1.6" fill="none"/>
+            <text x="1186" y="44" font-size="12" font-weight="700" text-anchor="middle">Storage &amp; UI</text>
+          </g>
+
+          <!-- arrows (no animation needed to avoid extra SVG entity issues) -->
+          <path d="M256 166 L296 166" stroke="#000" stroke-width="1.2" fill="none" marker-end="url(#arrow)" />
+          <path d="M516 166 L556 116" stroke="#000" stroke-width="1.2" fill="none" marker-end="url(#arrow)" />
+          <path d="M516 196 L556 246" stroke="#000" stroke-width="1.2" fill="none" marker-end="url(#arrow)" />
+          <path d="M776 116 L836 206" stroke="#000" stroke-width="1.2" fill="none" marker-end="url(#arrow)" />
+          <path d="M776 236 L836 236" stroke="#000" stroke-width="1.2" fill="none" marker-end="url(#arrow)" />
+          <path d="M996 220 L1116 240" stroke="#000" stroke-width="1.2" fill="none" marker-end="url(#arrow)" />
+          <path d="M1180 200 L1180 140" stroke="#000" stroke-width="1.2" fill="none" marker-end="url(#arrow)" />
+
+          <!-- invisible hit targets (bigger clickable areas) -->
+          <rect x="26" y="86" width="240" height="160" fill="transparent" class="node" data-node="ingest" />
+          <rect x="286" y="76" width="240" height="180" fill="transparent" class="node" data-node="preprocess" />
+          <rect x="546" y="56" width="240" height="220" fill="transparent" class="node" data-node="feature" />
+          <rect x="826" y="126" width="240" height="260" fill="transparent" class="node" data-node="scoring" />
+          <rect x="1106" y="6" width="260" height="320" fill="transparent" class="node" data-node="storage" />
+        </svg>
+      </div>
+      <aside class="card" id="panel">
+        <div class="controls">
+          <input id="search" class="search" placeholder="Search nodes or errors (e.g. .prev, Math.max)" />
+          <button id="diagBtn" class="btn" title="Run wallet diagnostics">Run Wallet Diagnostics</button>
+        </div>
+
+        <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:8px">
+          <div style="display:flex;justify-content:space-between;align-items:center">
+            <div>
+              <div class="small">Wallet connection</div>
+              <div id="walletStatus" class="walletStatus muted">Not connected</div>
+            </div>
+            <div style="display:flex;gap:8px">
+              <button id="connectWallet" class="btn">Connect Wallet</button>
+              <button id="mockConnect" class="btn">Simulate</button>
+            </div>
+          </div>
+          <div class="small">If you get <em>Failed to connect to MetaMask</em>, ensure MetaMask is installed and unlocked and you allow connection when prompted. Use <strong>Simulate</strong> to run local tests without MetaMask.</div>
+        </div>
+
+        <div class="legend">
+          <div><strong>Active node:</strong> <span id="activeName">none</span></div>
+          <div style="margin-top:8px">Click a node to open the fixed code snippet and a short explanation.</div>
+        </div>
+
+        <div id="tooltip" class="tooltip" style="display:none;right:24px;top:180px">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+            <div class="node-label" id="tipTitle">Title</div>
+            <button class="close" id="closeTip">×</button>
+          </div>
+          <div class="small" id="tipDesc">Description</div>
+          <hr style="border:none;border-top:1px solid rgba(255,255,255,0.03);margin:8px 0" />
+          <pre id="codeBlock">// code</pre>
+          <div id="diagResults" class="diag" style="display:none"></div>
+        </div>
+
+        <div style="margin-top:12px;font-size:13px;color:var(--muted)">
+          <strong>Source:</strong> corrected snippets are derived from your uploaded <em>AppOKBKP.tsx</em> (used to locate errors and produce fixes). See the full file in your workspace.
+        </div>
+      </aside>
+    </div>
+  </div>
+  <script>
+  // --- Corrected code snippets extracted and fixed ---
+  const snippets = {
+    ingest: {
+      title: 'generateWaveform &amp; generateSpectrogram (no change)',
+      desc: 'Mock data generators used to create waveform &amp; spectrogram arrays.',
+      code: `// generateWaveform (unchanged)
+  const generateWaveform = (duration, quality) => {
+    return Array.from({ length: 100 }, (_, i) => {
+      const noise = Math.random() * (1 - quality);
+      const signal = Math.sin(i * 0.3) * quality + Math.sin(i * 0.1) * 0.5;
+      return Math.max(-1, Math.min(1, signal + noise));
+    });
+  };
+
+  // generateSpectrogram (unchanged)
+  const generateSpectrogram = (quality) => {
+    return Array.from({ length: 20 }, (_, freq) =>
+      Array.from({ length: 50 }, (_, time) => {
+        const intensity = quality * Math.random() * (1 - freq * 0.02);
+        return Math.max(0, intensity);
+      })
+    );
+  };`
+    },
+
+    preprocess: {
+      title: 'BiodiversityMap / WaveformViz (no critical fixes)',
+      desc: 'UI helpers for visualizing waveform, spectrogram and small map. No syntax errors here from the original file.',
+      code: `// WaveformViz and SpectrogramViz are UI-only helpers and looked fine. Keep them as-is in TSX.`
+    },
+
+    scoring: {
+      title: 'Corrected getCalculationSteps + values',
+      desc: 'No syntax errors here; this builds the steps array used to compute the running token total.',
+      code: `const getCalculationSteps = (rec) => [{
+    id: 'duration', name: 'Análisis de Duración del Audio', value: Math.floor(rec.duration / 30), /* ... */ },
+    /* ... other steps ... */
+  ];`
+    },
+
+    token: {
+      title: 'Fixed startCalculation (bug fixes: spread operators and history max)',
+      desc: 'Primary fixes: use spread operator [...prev] (not [.prev]) and use Math.max(...history, current) instead of Math.max(.history, current). Also ensure tokenHistory updates use previous state correctly.',
+      code: `const startCalculation = (selectedRecording) => {
+    setRecording(selectedRecording);
+    setIsCalculating(true);
+    setCurrentStep(null);
+    setCompletedSteps([]);
+    setFinalTokens(0);
+    setAnimationPhase('processing');
+    setTokenHistory([1]);
+
+    const steps = getCalculationSteps(selectedRecording);
+    let runningTotal = 1;
+
+    steps.forEach((step, index) => {
+      setTimeout(() => {
+        setCurrentStep(step.id);
+
+        setTimeout(() => setShowModal(step.id), 200);
+
+        setTimeout(() => {
+          setShowModal(null);
+
+          if (index === 0) {
+            runningTotal = step.value;
+          } else {
+            runningTotal *= step.value;
+          }
+
+          // CORRECT: use spread operator to append to arrays
+          setCompletedSteps(prev => [...prev, step.id]);
+
+          const newTotal = Math.round(runningTotal);
+          setFinalTokens(newTotal);
+
+          // CORRECT: append to tokenHistory properly
+          setTokenHistory(prev => [...prev, newTotal]);
+
+          if (index === steps.length - 1) {
+            setTimeout(() => {
+              setIsCalculating(false);
+              setAnimationPhase('complete');
+              setCurrentStep(null);
+            }, 500);
+          }
+        }, 2800);
+      }, index * 3500);
+    });
+  };`
+    },
+
+    tokenFlowChart: {
+      title: 'Fixed TokenFlowChart — correct Math.max usage',
+      desc: 'Compute a max value from history and current safely (avoid invalid `.history`).',
+      code: `const TokenFlowChart = ({ history, current }) => {
+    const maxVal = Math.max(...history, current);
+    return (<div className="h-24 bg-gradient-to-r ...">
+      {history.map((value, i) => {
+        const height = Math.min((value / maxVal) * 60, 60);
+        return (<div key={i} style={{ height: \`${height}px\` }} />);
+      })}
+    </div>)
+  };`
+    }
+  };
+  // --- UI wiring for nodes (unchanged functionality) ---
+  const panel = document.getElementById('panel');
+  const tooltip = document.getElementById('tooltip');
+  const tipTitle = document.getElementById('tipTitle');
+  const tipDesc = document.getElementById('tipDesc');
+  const codeBlock = document.getElementById('codeBlock');
+  const activeName = document.getElementById('activeName');
+  const closeTip = document.getElementById('closeTip');
+  const search = document.getElementById('search');
+
+  function showNode(key){
+    const s = snippets[key];
+    if(!s) return;
+    tipTitle.textContent = s.title;
+    tipDesc.textContent = s.desc;
+    codeBlock.textContent = s.code;
+    tooltip.style.display = 'block';
+    activeName.textContent = key;
+    // hide diagnostic area if visible
+    const diagResults = document.getElementById('diagResults'); if(diagResults) diagResults.style.display = 'none';
+  }
+
+  function hideTip(){ tooltip.style.display = 'none'; activeName.textContent = 'none'; }
+  closeTip.onclick = hideTip;
+
+  // attach click/hover listeners to SVG nodes
+  document.querySelectorAll('#diagram .node').forEach(el => {
+    el.addEventListener('click', (e) => {
+      const key = el.getAttribute('data-node');
+      showNode(key);
+    });
+    el.addEventListener('mouseenter', (e) => {
+      const key = el.getAttribute('data-node');
+      const s = snippets[key];
+      if(s) {
+        tipTitle.textContent = s.title;
+        tipDesc.textContent = s.desc;
+        codeBlock.textContent = s.code.split('\n').slice(0,6).join('\n') + '\n\n/* click to open full snippet */';
+        tooltip.style.display = 'block';
+      }
+    });
+    el.addEventListener('mouseleave', (e) => { /* keep tooltip open until click or close */ });
+  });
+
+  // search helper
+  search.addEventListener('input', (ev) => {
+    const q = ev.target.value.trim().toLowerCase();
+    if(!q){ document.querySelectorAll('#diagram .node').forEach(n=>n.style.opacity=1); return; }
+    document.querySelectorAll('#diagram .node').forEach(n=>{
+      const key = n.getAttribute('data-node')||'';
+      n.style.opacity = key.indexOf(q) !== -1 || (snippets[key] && (snippets[key].code||'').toLowerCase().indexOf(q)!==-1) ? 1 : 0.25;
+    });
+  });
+
+  // --- Robust MetaMask / Ethereum provider handling ---
+  const walletState = { connected: false, account: null, chainId: null, mock: false };
+  const walletStatusEl = document.getElementById('walletStatus');
+  const connectBtn = document.getElementById('connectWallet');
+  const mockBtn = document.getElementById('mockConnect');
+  const diagBtn = document.getElementById('diagBtn');
+
+  function updateWalletUI(message){
+    if(message) walletStatusEl.textContent = message;
+    else if(walletState.mock) walletStatusEl.textContent = `Simulated: ${walletState.account || '0xMOCK'}`;
+    else if(walletState.connected) walletStatusEl.textContent = `Connected: ${walletState.account || 'unknown'} (chain ${walletState.chainId})`;
+    else walletStatusEl.textContent = 'Not connected';
+
+    connectBtn.textContent = walletState.connected && !walletState.mock ? 'Disconnect' : 'Connect Wallet';
+  }
+
+  async function connectWallet(){
+    // Attempt to connect to MetaMask / injected provider safely
+    if(walletState.connected && !walletState.mock){
+      // disconnect (only local state, cannot force MetaMask to disconnect programmatically)
+      walletState.connected = false; walletState.account = null; walletState.chainId = null; walletState.mock = false;
+      updateWalletUI();
+      return;
+    }
+
+    if(typeof window === 'undefined' || !window){
+      updateWalletUI('This environment does not expose window.');
+      return;
+    }
+
+    const eth = window.ethereum;
+    if(!eth){
+      // Provide actionable guidance rather than throwing
+      updateWalletUI('MetaMask not detected. Install from https://metamask.io/');
+      showDiagnosticText(['MetaMask or another Ethereum provider was not found on window.ethereum.\\nInstall the MetaMask browser extension and try again.']);
+      return;
+    }
+
+    try{
+      // Request account access
+      const accounts = await eth.request({ method: 'eth_requestAccounts' });
+      if(Array.isArray(accounts) && accounts.length > 0){
+        walletState.account = accounts[0];
+        walletState.connected = true;
+        walletState.chainId = eth.chainId || (await eth.request({ method: 'eth_chainId' }));
+        walletState.mock = false;
+        updateWalletUI();
+        showDiagnosticText([`Connected to ${walletState.account} on chain ${walletState.chainId}`]);
+
+        // attach listeners if provided
+        if(typeof eth.on === 'function'){
+          eth.on('accountsChanged', handleAccountsChanged);
+          eth.on('chainChanged', handleChainChanged);
+        }
+      } else {
+        updateWalletUI('No accounts returned from provider.');
+        showDiagnosticText(['Provider returned an empty account list. Ensure your wallet is unlocked and you allow account access.']);
+      }
+    }catch(err){
+      // Handle common errors gracefully
+      console.error('MetaMask connect error', err);
+      if(err && err.code === 4001){
+        // EIP-1193 userRejectedRequest
+        updateWalletUI('Connection request rejected by user.');
+        showDiagnosticText(['User rejected the connection request (error code 4001). Please authorize the site in MetaMask.']);
+      }else{
+        updateWalletUI('Failed to connect to MetaMask');
+        showDiagnosticText([`Failed to connect to MetaMask: ${err && err.message ? err.message : String(err)}`]);
+      }
+    }
+  }
+
+  function handleAccountsChanged(accounts){
+    if(!accounts || accounts.length === 0){
+      walletState.connected = false; walletState.account = null; updateWalletUI('No accounts available');
+    } else { walletState.account = accounts[0]; walletState.connected = true; updateWalletUI(); }
+  }
+
+  function handleChainChanged(chainId){
+    walletState.chainId = chainId; updateWalletUI();
+  }
+
+  function simulateConnect(){
+    // Test helper: simulate a connected wallet without MetaMask
+    walletState.mock = true;
+    walletState.connected = true;
+    walletState.account = '0xMOCKDEADBEEF';
+    walletState.chainId = '0x1';
+    updateWalletUI('Simulated connection');
+    showDiagnosticText([`Simulated account ${walletState.account} on chain ${walletState.chainId}`]);
+  }
+
+  function showDiagnosticText(lines){
+    const diag = document.getElementById('diagResults');
+    if(!diag) return;
+    diag.style.display = 'block';
+    diag.innerText = lines.join('\\n');
+    // also show tooltip if hidden
+    tooltip.style.display = 'block';
+  }
+
+  async function runDiagnostics(){
+    const out = [];
+    if(typeof window === 'undefined'){
+      out.push('Window not found in this environment.'); showDiagnosticText(out); return;
+    }
+    const eth = window.ethereum;
+    out.push(`userAgent: ${navigator.userAgent}`);
+    if(!eth){
+      out.push('window.ethereum is undefined — no injected provider detected.');
+      out.push('Action: Install MetaMask from https://metamask.io/ or use the Simulate button.');
+      showDiagnosticText(out); return;
+    }
+    out.push('window.ethereum detected.');
+    try{
+      const isMM = !!eth.isMetaMask;
+      out.push(`isMetaMask: ${isMM}`);
+    }catch(e){ out.push('isMetaMask: (error reading property)'); }
+
+    try{
+      const accounts = await eth.request({ method: 'eth_accounts' });
+      out.push(`eth_accounts returned: ${Array.isArray(accounts) ? accounts.join(', ') : String(accounts)}`);
+    }catch(err){ out.push(`eth_accounts failed: ${err && err.message ? err.message : String(err)}`); }
+
+    try{
+      const chainId = eth.chainId || await eth.request({ method: 'eth_chainId' });
+      out.push(`chainId: ${chainId}`);
+    }catch(err){ out.push('Failed to read chainId: ' + (err && err.message ? err.message : String(err))); }
+
+    out.push('--- diagnostic complete ---');
+    showDiagnosticText(out);
+  }
+
+  // wire buttons
+  connectBtn.addEventListener('click', connectWallet);
+  mockBtn.addEventListener('click', simulateConnect);
+  diagBtn.addEventListener('click', runDiagnostics);
+
+  // Initial UI update
+  updateWalletUI();
+
+  // If an injected provider is present, attach listeners cautiously
+  if(typeof window !== 'undefined' && window.ethereum && typeof window.ethereum.on === 'function'){
+    try{
+      window.ethereum.on('accountsChanged', handleAccountsChanged);
+      window.ethereum.on('chainChanged', handleChainChanged);
+    }catch(e){ console.warn('Failed to attach ethereum listeners', e); }
+  }
+
+  // informative console note
+  console.log('Interactive diagram loaded — click nodes to view corrected code snippets. MetaMask handler added (safe checks).');
+  </script>
+  </body>
+  </html>

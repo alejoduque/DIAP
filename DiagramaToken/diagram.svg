@@ -1,0 +1,423 @@
+<?xml version="1.0" encoding="utf-8"?>
+<svg id="diagram"
+     xmlns="http://www.w3.org/2000/svg"
+     viewBox="0 0 1400 800"
+     width="1400" height="800"
+     aria-labelledby="title desc" role="img">
+  <title id="title">Motor de Tokenización Bioacústica - Diagrama de Flujo Mejorado</title>
+  <desc id="desc">Diagrama SVG interactivo reorganizado que muestra el flujo claro de datos desde la ingesta hasta la tokenización con jerarquía visual mejorada.</desc>
+
+  <defs>
+    <!-- Arrowhead styles (40% smaller) -->
+    <marker id="arrow-primary" markerWidth="7.2" markerHeight="7.2" refX="7.2" refY="3.6" orient="auto">
+      <path d="M0 0 L7.2 3.6 L0 7.2 z" fill="#4ade80"/>
+    </marker>
+    <marker id="arrow-secondary" markerWidth="6" markerHeight="6" refX="6" refY="3" orient="auto">
+      <path d="M0 0 L6 3 L0 6 z" fill="#60a5fa"/>
+    </marker>
+    <marker id="arrow-feedback" markerWidth="6" markerHeight="6" refX="6" refY="3" orient="auto">
+      <path d="M0 0 L6 3 L0 6 z" fill="#f59e0b"/>
+    </marker>
+
+    <!-- Glow filters -->
+    <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur in="SourceGraphic" stdDeviation="4" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+
+    <filter id="strong-glow" x="-60%" y="-60%" width="220%" height="220%">
+      <feGaussianBlur in="SourceGraphic" stdDeviation="8" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+
+    <!-- Background gradient -->
+    <linearGradient id="bg-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#0f172a;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#1e293b;stop-opacity:1" />
+    </linearGradient>
+
+    <style><![CDATA[
+      /* Base styles */
+      .primary-flow { stroke: #4ade80; stroke-width: 3; fill: none; stroke-linecap: round; stroke-linejoin: round; }
+      .secondary-flow { stroke: #60a5fa; stroke-width: 2; fill: none; stroke-linecap: round; stroke-linejoin: round; }
+      .feedback-flow { stroke: #f59e0b; stroke-width: 2; fill: none; stroke-linecap: round; stroke-linejoin: round; }
+      .support-flow { stroke: #94a3b8; stroke-width: 1.5; fill: none; stroke-linecap: round; stroke-linejoin: round; }
+      
+      /* Node styles by category */
+      .core-process { stroke: #4ade80; stroke-width: 2.5; fill: rgba(74, 222, 128, 0.08); rx: 12; ry: 12; }
+      .analysis-process { stroke: #60a5fa; stroke-width: 2; fill: rgba(96, 165, 250, 0.06); rx: 10; ry: 10; }
+      .output-process { stroke: #a855f7; stroke-width: 2; fill: rgba(168, 85, 247, 0.06); rx: 10; ry: 10; }
+      .support-process { stroke: #94a3b8; stroke-width: 1.5; fill: rgba(148, 163, 184, 0.04); rx: 8; ry: 8; }
+      
+      /* Text styles (+2px font sizes) */
+      .title-text { fill: #f8fafc; font-family: 'Inter', Arial, sans-serif; font-size: 18px; font-weight: 700; }
+      .node-title { fill: #f1f5f9; font-family: 'Inter', Arial, sans-serif; font-size: 16px; font-weight: 600; }
+      .node-detail { fill: #cbd5e1; font-family: 'Inter', Arial, sans-serif; font-size: 13px; font-weight: 400; }
+      .flow-label { fill: #94a3b8; font-family: 'Inter', Arial, sans-serif; font-size: 12px; font-weight: 500; }
+      .section-header { fill: #e2e8f0; font-family: 'Inter', Arial, sans-serif; font-size: 15px; font-weight: 600; }
+      
+      /* Interactive states */
+      .node { cursor: move; transition: all 0.2s ease; }
+      .node.dragging { opacity: 0.8; filter: url(#strong-glow); z-index: 1000; }
+      .node:hover .core-process { stroke: #22c55e; stroke-width: 3; filter: url(#glow); }
+      .node:hover .analysis-process { stroke: #3b82f6; stroke-width: 2.5; filter: url(#glow); }
+      .node:hover .output-process { stroke: #9333ea; stroke-width: 2.5; filter: url(#glow); }
+      .node:hover .support-process { stroke: #64748b; stroke-width: 2; filter: url(#glow); }
+      .node:hover .node-title { fill: #ffffff; }
+      .node:hover .node-detail { fill: #e2e8f0; }
+      
+      /* Flow animations */
+      .animated-flow { stroke-dasharray: 12 8; animation: flow 2.5s linear infinite; }
+      .fast-flow { stroke-dasharray: 8 6; animation: flow 1.8s linear infinite; }
+      .slow-flow { stroke-dasharray: 6 10; animation: flow 3.5s linear infinite; }
+      
+      @keyframes flow {
+        0% { stroke-dashoffset: 0; }
+        100% { stroke-dashoffset: -40; }
+      }
+      
+      /* Process indicators */
+      .pulse { animation: pulse 3s ease-in-out infinite; }
+      @keyframes pulse {
+        0%, 100% { opacity: 0.3; }
+        50% { opacity: 0.8; }
+      }
+    ]]></style>
+
+    <!-- Process flow dot -->
+    <g id="flow-dot">
+      <circle r="5" fill="#4ade80" filter="url(#glow)"/>
+      <circle r="2" fill="#ffffff"/>
+    </g>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1400" height="800" fill="url(#bg-gradient)"/>
+
+  <!-- Header -->
+  <text x="40" y="40" class="title-text" font-size="22">Motor de Tokenización Bioacústica</text>
+  <text x="40" y="60" class="section-header">Arquitectura de Flujo de Datos - Haz clic en los nodos para implementación detallada</text>
+
+  <!-- SECTION LABELS -->
+  <text x="60" y="110" class="section-header">CAPA DE ENTRADA</text>
+  <text x="380" y="110" class="section-header">PIPELINE DE PROCESAMIENTO</text>
+  <text x="960" y="110" class="section-header">ANÁLISIS Y PUNTUACIÓN</text>
+  <text x="1200" y="110" class="section-header">SALIDA</text>
+
+  <!-- CORE DATA FLOW (Top Row) -->
+  
+  <!-- 1. INGEST -->
+  <g class="node" data-node="ingest" transform="translate(40,130)">
+    <rect class="core-process" width="220" height="140"/>
+    <text class="node-title" x="110" y="25" text-anchor="middle">1. Ingesta de Datos</text>
+    <text class="node-detail" x="15" y="45">• Metadatos de grabación (ID, duración)</text>
+    <text class="node-detail" x="15" y="60">• Datos de ubicación y especies</text>
+    <text class="node-detail" x="15" y="75">• Forma de onda de audio crudo</text>
+    <text class="node-detail" x="15" y="90">• Espectrograma generado</text>
+    <text class="node-detail" x="15" y="110" fill="#4ade80">→ Dataset validado</text>
+    <circle class="pulse" cx="200" cy="20" r="8" fill="#4ade80" opacity="0.4"/>
+  </g>
+
+  <!-- 2. PREPROCESSING -->
+  <g class="node" data-node="preprocess" transform="translate(300,130)">
+    <rect class="core-process" width="220" height="140"/>
+    <text class="node-title" x="110" y="25" text-anchor="middle">2. Preprocesamiento</text>
+    <text class="node-detail" x="15" y="45">• Segmentación de señal</text>
+    <text class="node-detail" x="15" y="60">• Reducción de ruido y filtrado</text>
+    <text class="node-detail" x="15" y="75">• Remuestreo y normalización</text>
+    <text class="node-detail" x="15" y="90">• Detección de envolvente de amplitud</text>
+    <text class="node-detail" x="15" y="110" fill="#4ade80">→ Segmentos de audio limpios</text>
+    <circle class="pulse" cx="200" cy="20" r="8" fill="#4ade80" opacity="0.4"/>
+  </g>
+
+  <!-- PARALLEL ANALYSIS BRANCHES -->
+  
+  <!-- 3A. FEATURE EXTRACTION -->
+  <g class="node" data-node="feature" transform="translate(560,130)">
+    <rect class="analysis-process" width="200" height="120"/>
+    <text class="node-title" x="100" y="25" text-anchor="middle">3a. Extracción de Características</text>
+    <text class="node-detail" x="15" y="45">• Coeficientes MFCC</text>
+    <text class="node-detail" x="15" y="60">• Características espectrales</text>
+    <text class="node-detail" x="15" y="75">• Características temporales</text>
+    <text class="node-detail" x="15" y="95" fill="#60a5fa">→ Vectores de características</text>
+  </g>
+
+  <!-- 3B. METADATA ANALYSIS -->
+  <g class="node" data-node="metadata" transform="translate(560,270)">
+    <rect class="analysis-process" width="200" height="100"/>
+    <text class="node-title" x="100" y="25" text-anchor="middle">3b. Análisis de Metadatos</text>
+    <text class="node-detail" x="15" y="45">• Puntuación de completitud</text>
+    <text class="node-detail" x="15" y="65">• Búsqueda de rareza geográfica</text>
+    <text class="node-detail" x="15" y="85" fill="#60a5fa">→ Puntuaciones de contexto</text>
+  </g>
+
+  <!-- SCORING AGGREGATION -->
+  
+  <!-- 4. SCORING ENGINE -->
+  <g class="node" data-node="scoring" transform="translate(820,180)">
+    <rect class="analysis-process" width="240" height="160"/>
+    <text class="node-title" x="120" y="25" text-anchor="middle">4. Agregador de Puntuación</text>
+    <text class="node-detail" x="15" y="50">• Factor de ponderación de duración</text>
+    <text class="node-detail" x="15" y="65">• Multiplicador de calidad de audio</text>
+    <text class="node-detail" x="15" y="80">• Puntuación de completitud de metadatos</text>
+    <text class="node-detail" x="15" y="95">• Bonificación por rareza geográfica</text>
+    <text class="node-detail" x="15" y="110">• Prioridad de conservación UICN</text>
+    <text class="node-detail" x="15" y="135" fill="#60a5fa">→ Puntuación compuesta</text>
+    <circle class="pulse" cx="220" cy="20" r="8" fill="#60a5fa" opacity="0.4"/>
+  </g>
+
+  <!-- FINAL OUTPUT -->
+  
+  <!-- 5. TOKENIZATION -->
+  <g class="node" data-node="token" transform="translate(1120,200)">
+    <rect class="output-process" width="180" height="120"/>
+    <text class="node-title" x="90" y="25" text-anchor="middle">5. Tokenización</text>
+    <text class="node-detail" x="15" y="45">• Aplicar fórmula de puntuación</text>
+    <text class="node-detail" x="15" y="60">• Redondear a unidades de token</text>
+    <text class="node-detail" x="15" y="75">• Generar BIOTOKEN</text>
+    <text class="node-detail" x="15" y="95" fill="#a855f7">→ Tokens finales</text>
+  </g>
+
+  <!-- 6. STORAGE & UI -->
+  <g class="node" data-node="storage" transform="translate(1120,140)">
+    <rect class="output-process" width="180" height="50"/>
+    <text class="node-title" x="90" y="25" text-anchor="middle">6. Almacenamiento e Interfaz</text>
+    <text class="node-detail" x="15" y="42">• Libro de tokens • Panel de control</text>
+  </g>
+
+  <!-- SUPPORT SYSTEMS (Bottom Row) -->
+  
+  <!-- EXTERNAL APIS -->
+  <g class="node" data-node="external" transform="translate(820,390)">
+    <rect class="support-process" width="180" height="80"/>
+    <text class="node-title" x="90" y="25" text-anchor="middle">APIs Externas</text>
+    <text class="node-detail" x="15" y="45">• API Lista Roja de la UICN</text>
+    <text class="node-detail" x="15" y="60">• Bases de datos geográficas</text>
+  </g>
+
+  <!-- ORCHESTRATOR -->
+  <g class="node" data-node="orchestrator" transform="translate(300,500)">
+    <rect class="support-process" width="220" height="70"/>
+    <text class="node-title" x="110" y="25" text-anchor="middle">Orquestador de Procesos</text>
+    <text class="node-detail" x="15" y="45">• Gestión de cola de trabajos</text>
+    <text class="node-detail" x="15" y="60">• Secuenciación de pipeline</text>
+  </g>
+
+  <!-- TRAINING FEEDBACK -->
+  <g class="node" data-node="training" transform="translate(40,500)">
+    <rect class="support-process" width="220" height="70"/>
+    <text class="node-title" x="110" y="25" text-anchor="middle">Entrenamiento de Modelos</text>
+    <text class="node-detail" x="15" y="45">• Bucle de retroalimentación humana</text>
+    <text class="node-detail" x="15" y="60">• Sistema de marcado de calidad</text>
+  </g>
+
+  <!-- PRIMARY DATA FLOW -->
+  <g class="primary-flows">
+    <!-- Ingest → Preprocess -->
+    <path class="primary-flow animated-flow" d="M260 200 L300 200" marker-end="url(#arrow-primary)"/>
+    <text class="flow-label" x="280" y="195" text-anchor="middle">datos crudos</text>
+    
+    <!-- Preprocess → Feature Extraction -->
+    <path class="primary-flow animated-flow" d="M520 180 L560 180" marker-end="url(#arrow-primary)"/>
+    <text class="flow-label" x="540" y="175" text-anchor="middle">audio limpio</text>
+    
+    <!-- Preprocess → Metadata Analysis -->
+    <path class="primary-flow animated-flow" d="M520 220 Q540 245 560 300" marker-end="url(#arrow-primary)"/>
+    <text class="flow-label" x="535" y="255" text-anchor="middle">metadatos</text>
+    
+    <!-- Feature → Scoring -->
+    <path class="primary-flow animated-flow" d="M760 190 Q790 190 820 220" marker-end="url(#arrow-primary)"/>
+    <text class="flow-label" x="790" y="185" text-anchor="middle">características</text>
+    
+    <!-- Metadata → Scoring -->
+    <path class="primary-flow animated-flow" d="M760 310 Q790 290 820 270" marker-end="url(#arrow-primary)"/>
+    <text class="flow-label" x="790" y="305" text-anchor="middle">contexto</text>
+    
+    <!-- Scoring → Tokenization -->
+    <path class="primary-flow animated-flow" d="M1060 260 L1120 260" marker-end="url(#arrow-primary)"/>
+    <text class="flow-label" x="1090" y="255" text-anchor="middle">puntuación</text>
+    
+    <!-- Tokenization → Storage -->
+    <path class="primary-flow animated-flow" d="M1210 200 L1210 190" marker-end="url(#arrow-primary)"/>
+  </g>
+
+  <!-- SECONDARY FLOWS -->
+  <g class="secondary-flows">
+    <!-- External APIs → Scoring -->
+    <path class="secondary-flow slow-flow" d="M910 390 L940 340" marker-end="url(#arrow-secondary)"/>
+    <text class="flow-label" x="920" y="375" text-anchor="middle">datos API</text>
+    
+    <!-- Orchestrator → Preprocessing -->
+    <path class="support-flow slow-flow" d="M410 500 L410 270" marker-end="url(#arrow-secondary)"/>
+    <text class="flow-label" x="420" y="385" text-anchor="middle">control</text>
+  </g>
+
+  <!-- FEEDBACK FLOWS -->
+  <g class="feedback-flows">
+    <!-- Storage → Training (feedback loop) -->
+    <path class="feedback-flow slow-flow" d="M1120 165 Q560 80 260 500" marker-end="url(#arrow-feedback)"/>
+    <text class="flow-label" x="690" y="75" text-anchor="middle">retroalimentación de rendimiento</text>
+  </g>
+
+  <!-- Moving process indicator -->
+  <path id="main-flow-path" d="M260 200 L520 200 Q540 200 560 190 L760 190 Q790 190 820 220 L1060 260 L1120 260" 
+        fill="none" opacity="0"/>
+  <use href="#flow-dot">
+    <animateMotion dur="8s" repeatCount="indefinite">
+      <mpath href="#main-flow-path"/>
+    </animateMotion>
+    <animate attributeName="opacity" values="0;1;1;0" dur="8s" repeatCount="indefinite"/>
+  </use>
+
+  <!-- LEGEND -->
+  <g transform="translate(40,620)">
+    <rect width="1320" height="140" rx="8" fill="rgba(0,0,0,0.3)" stroke="rgba(148,163,184,0.3)" stroke-width="1"/>
+    <text x="20" y="25" class="section-header">Leyenda de Flujos</text>
+    
+    <g transform="translate(20,40)">
+      <line x1="0" y1="0" x2="30" y2="0" class="primary-flow" marker-end="url(#arrow-primary)"/>
+      <text x="40" y="5" class="node-detail">Flujo Principal de Datos - Pipeline de procesamiento principal</text>
+    </g>
+    
+    <g transform="translate(20,60)">
+      <line x1="0" y1="0" x2="30" y2="0" class="secondary-flow" marker-end="url(#arrow-secondary)"/>
+      <text x="40" y="5" class="node-detail">Flujo Secundario - Datos externos y señales de control</text>
+    </g>
+    
+    <g transform="translate(20,80)">
+      <line x1="0" y1="0" x2="30" y2="0" class="feedback-flow" marker-end="url(#arrow-feedback)"/>
+      <text x="40" y="5" class="node-detail">Bucle de Retroalimentación - Mejora del modelo y control de calidad</text>
+    </g>
+    
+    <g transform="translate(450,40)">
+      <rect width="20" height="15" class="core-process"/>
+      <text x="30" y="12" class="node-detail">Proceso Principal</text>
+    </g>
+    
+    <g transform="translate(450,60)">
+      <rect width="20" height="15" class="analysis-process"/>
+      <text x="30" y="12" class="node-detail">Módulo de Análisis</text>
+    </g>
+    
+    <g transform="translate(450,80)">
+      <rect width="20" height="15" class="output-process"/>
+      <text x="30" y="12" class="node-detail">Sistema de Salida</text>
+    </g>
+    
+    <g transform="translate(450,100)">
+      <rect width="20" height="15" class="support-process"/>
+      <text x="30" y="12" class="node-detail">Sistema de Soporte</text>
+    </g>
+    
+    <text x="650" y="52" class="node-detail">• Pasa el cursor sobre los nodos para mayor visibilidad</text>
+    <text x="650" y="72" class="node-detail">• Las flechas animadas muestran la dirección del flujo de datos</text>
+    <text x="650" y="92" class="node-detail">• La codificación por colores indica las categorías de procesos</text>
+    <text x="650" y="112" class="node-detail">• Haz clic en los nodos para acceder a detalles de implementación</text>
+    <text x="650" y="125" class="node-detail" fill="#4ade80">• Arrastra los nodos para reorganizar el diseño</text>
+  </g>
+
+  <!-- JavaScript for drag functionality -->
+  <script><![CDATA[
+    (function() {
+      let isDragging = false;
+      let currentNode = null;
+      let startPos = { x: 0, y: 0 };
+      let nodeOffset = { x: 0, y: 0 };
+
+      // Get all draggable nodes
+      const nodes = document.querySelectorAll('.node');
+      
+      nodes.forEach(node => {
+        node.addEventListener('mousedown', startDrag);
+        node.addEventListener('click', handleNodeClick);
+      });
+
+      document.addEventListener('mousemove', drag);
+      document.addEventListener('mouseup', endDrag);
+
+      function startDrag(e) {
+        e.preventDefault();
+        isDragging = true;
+        currentNode = e.currentTarget;
+        
+        // Add dragging class for visual feedback
+        currentNode.classList.add('dragging');
+        
+        // Get the current transform
+        const transform = currentNode.getAttribute('transform');
+        const match = transform.match(/translate\(([^,]+),([^)]+)\)/);
+        const currentX = parseFloat(match[1]);
+        const currentY = parseFloat(match[2]);
+        
+        // Calculate offset from mouse to node origin
+        const svgRect = document.getElementById('diagram').getBoundingClientRect();
+        const mouseX = e.clientX - svgRect.left;
+        const mouseY = e.clientY - svgRect.top;
+        
+        nodeOffset.x = mouseX - currentX;
+        nodeOffset.y = mouseY - currentY;
+        
+        startPos = { x: mouseX, y: mouseY };
+      }
+
+      function drag(e) {
+        if (!isDragging || !currentNode) return;
+        
+        e.preventDefault();
+        
+        const svgRect = document.getElementById('diagram').getBoundingClientRect();
+        const mouseX = e.clientX - svgRect.left;
+        const mouseY = e.clientY - svgRect.top;
+        
+        // Calculate new position
+        const newX = mouseX - nodeOffset.x;
+        const newY = mouseY - nodeOffset.y;
+        
+        // Constrain to SVG bounds (with some padding)
+        const constrainedX = Math.max(20, Math.min(1200, newX));
+        const constrainedY = Math.max(100, Math.min(650, newY));
+        
+        // Update node position
+        currentNode.setAttribute('transform', `translate(${constrainedX},${constrainedY})`);
+      }
+
+      function endDrag(e) {
+        if (!isDragging) return;
+        
+        isDragging = false;
+        if (currentNode) {
+          currentNode.classList.remove('dragging');
+          currentNode = null;
+        }
+      }
+
+      function handleNodeClick(e) {
+        // Only handle click if we didn't drag
+        const mouseX = e.clientX;
+        const mouseY = e.clientY;
+        const distance = Math.sqrt(
+          Math.pow(mouseX - startPos.x, 2) + Math.pow(mouseY - startPos.y, 2)
+        );
+        
+        if (distance < 5) { // Click threshold
+          const nodeId = e.currentTarget.getAttribute('data-node');
+          console.log(`Nodo clickeado: ${nodeId}`);
+          // Aquí podrías activar funcionalidad adicional
+          // como mostrar fragmentos de código o explicaciones detalladas
+        }
+      }
+
+      // Prevent text selection during drag
+      document.addEventListener('selectstart', function(e) {
+        if (isDragging) e.preventDefault();
+      });
+    })();
+  ]]></script>
+
+</svg>

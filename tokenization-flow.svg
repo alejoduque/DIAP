@@ -1,0 +1,219 @@
+<!-- Save as tokenization-flow.svg or paste inline in HTML -->
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+     viewBox="0 0 1280 720" width="1280" height="720" font-family="Inter, Arial, sans-serif">
+
+  <defs>
+    <!-- Arrowhead -->
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="10" refY="5" orient="auto">
+      <path d="M0 0 L10 5 L0 10 z" fill="#000" />
+    </marker>
+
+    <!-- subtle node pulse (used by <use>) -->
+    <filter id="softGlow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="1.2" result="coloredBlur"/>
+      <feMerge>
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+
+  <!-- Title -->
+  <text x="40" y="36" font-size="18" font-weight="700">Bioacoustic Tokenization — System Data Flow (line-art)</text>
+  <text x="40" y="56" font-size="12" fill="#000">Detailed components, multiplicative token calculus, ML & API integrations, UI & storage</text>
+
+  <!-- Main pipeline nodes (left -> right) -->
+  <!-- INGEST -->
+  <g id="ingest">
+    <rect x="40" y="100" width="220" height="140" rx="8" ry="8" stroke="#000" stroke-width="2" fill="none"/>
+    <text x="150" y="128" font-size="14" font-weight="700" text-anchor="middle">1. Ingest / Recorder</text>
+
+    <!-- properties list -->
+    <text x="54" y="152" font-size="11">• id, duration, location</text>
+    <text x="54" y="168" font-size="11">• species, iucnStatus</text>
+    <text x="54" y="184" font-size="11">• qualityScore, metadataComplete</text>
+    <text x="54" y="200" font-size="11">• waveform[], spectrogram[][]</text>
+  </g>
+
+  <!-- PREPROCESS -->
+  <g id="preprocess">
+    <rect x="300" y="90" width="220" height="160" rx="8" ry="8" stroke="#000" stroke-width="2" fill="none"/>
+    <text x="410" y="118" font-size="14" font-weight="700" text-anchor="middle">2. Preprocessing</text>
+    <text x="314" y="152" font-size="11">• segmentation / windowing</text>
+    <text x="314" y="168" font-size="11">• denoise / resample</text>
+    <text x="314" y="184" font-size="11">• amplitude envelope</text>
+  </g>
+
+  <!-- FEATURE EXTRACTION -->
+  <g id="feature">
+    <rect x="560" y="70" width="220" height="100" rx="8" ry="8" stroke="#000" stroke-width="2" fill="none"/>
+    <text x="670" y="92" font-size="13" font-weight="700" text-anchor="middle">3a. Feature Extraction</text>
+    <text x="580" y="112" font-size="11">• Waveform / Envelope</text>
+    <text x="580" y="128" font-size="11">• Spectrogram / MFCCs</text>
+  </g>
+
+  <!-- METADATA & GEO -->
+  <g id="metadata">
+    <rect x="560" y="190" width="220" height="100" rx="8" ry="8" stroke="#000" stroke-width="2" fill="none"/>
+    <text x="670" y="212" font-size="13" font-weight="700" text-anchor="middle">3b. Metadata & Geo</text>
+    <text x="580" y="236" font-size="11">• completeness score</text>
+    <text x="580" y="252" font-size="11">• geospatial lookup (rare?)</text>
+  </g>
+
+  <!-- SCORING AGGREGATOR -->
+  <g id="scoring">
+    <rect x="840" y="140" width="220" height="160" rx="8" ry="8" stroke="#000" stroke-width="2" fill="none"/>
+    <text x="950" y="168" font-size="14" font-weight="700" text-anchor="middle">4. Scoring Aggregator</text>
+    <text x="860" y="196" font-size="11">• apply multiplicative factors:</text>
+    <text x="860" y="212" font-size="11">  - duration factor</text>
+    <text x="860" y="228" font-size="11">  - metadata completeness</text>
+    <text x="860" y="244" font-size="11">  - location rarity</text>
+    <text x="860" y="260" font-size="11">  - IUCN priority factor</text>
+    <text x="860" y="276" font-size="11">  - quality multiplier</text>
+  </g>
+
+  <!-- TOKEN ENGINE -->
+  <g id="token">
+    <rect x="1120" y="170" width="140" height="140" rx="8" ry="8" stroke="#000" stroke-width="2" fill="none"/>
+    <text x="1190" y="198" font-size="13" font-weight="700" text-anchor="middle">5. Tokenization Engine</text>
+    <text x="1134" y="224" font-size="11">• multiply sequentially</text>
+    <text x="1134" y="240" font-size="11">• round -> produce BIOTOKEN</text>
+    <text x="1134" y="256" font-size="11">• emit token + history</text>
+  </g>
+
+  <!-- STORAGE / UI / VIS -->
+  <g id="output">
+    <rect x="1120" y="20" width="140" height="120" rx="8" ry="8" stroke="#000" stroke-width="2" fill="none"/>
+    <text x="1190" y="48" font-size="13" font-weight="700" text-anchor="middle">Storage & UI</text>
+    <text x="1134" y="74" font-size="11">• Token ledger / DB</text>
+    <text x="1134" y="92" font-size="11">• TokenFlowChart / History</text>
+    <text x="1134" y="110" font-size="11">• Modal / Progress indicators</text>
+  </g>
+
+  <!-- QUALITY MODEL (external-ish) -->
+  <g id="qualityModel">
+    <rect x="840" y="20" width="220" height="100" rx="8" ry="8" stroke="#000" stroke-width="2" fill="none"/>
+    <text x="950" y="44" font-size="13" font-weight="700" text-anchor="middle">Quality Estimator (Deep Model)</text>
+    <text x="860" y="68" font-size="11">• outputs qualityScore ∈ [0,1]</text>
+    <text x="860" y="84" font-size="11">• used as final multiplier</text>
+  </g>
+
+  <!-- IUCN / External API box -->
+  <g id="externalAPIs">
+    <rect x="1080" y="340" width="180" height="80" rx="8" ry="8" stroke="#000" stroke-width="2" fill="none"/>
+    <text x="1169" y="366" font-size="12" font-weight="700" text-anchor="middle">External APIs</text>
+    <text x="1096" y="388" font-size="11">• IUCN Red List lookup</text>
+    <text x="1096" y="404" font-size="11">• GeoDB / Biodiversity data</text>
+  </g>
+
+  <!-- QUEUE / ORCHESTRATOR -->
+  <g id="orchestrator">
+    <rect x="300" y="420" width="220" height="80" rx="8" ry="8" stroke="#000" stroke-width="2" fill="none"/>
+    <text x="410" y="448" font-size="13" font-weight="700" text-anchor="middle">Orchestrator / Queue</text>
+    <text x="314" y="470" font-size="11">• startCalculation (sequenced steps)</text>
+    <text x="314" y="486" font-size="11">• delays, modal triggers</text>
+  </g>
+
+  <!-- ML Retraining Loop (feedback) -->
+  <g id="retrain">
+    <rect x="40" y="420" width="220" height="80" rx="8" ry="8" stroke="#000" stroke-width="2" fill="none"/>
+    <text x="150" y="448" font-size="13" font-weight="700" text-anchor="middle">Model Training</text>
+    <text x="54" y="470" font-size="11">• flagged examples</text>
+    <text x="54" y="486" font-size="11">• human-in-the-loop retraining</text>
+  </g>
+
+  <!-- ARROW PATHS (primary) -->
+  <!-- Ingest -> Preprocess -->
+  <path id="p_ing_to_pre" d="M260 170 L300 170" stroke="#000" stroke-width="1.6" fill="none" marker-end="url(#arrow)" stroke-dasharray="6 6">
+    <animate attributeName="stroke-dashoffset" from="0" to="-24" dur="1.6s" repeatCount="indefinite" />
+  </path>
+
+  <!-- Preprocess -> Feature -->
+  <path id="p_pre_to_feat" d="M520 170 L560 120" stroke="#000" stroke-width="1.6" fill="none" marker-end="url(#arrow)" stroke-dasharray="6 6">
+    <animate attributeName="stroke-dashoffset" from="0" to="-20" dur="1.8s" repeatCount="indefinite" />
+  </path>
+
+  <!-- Preprocess -> Metadata -->
+  <path id="p_pre_to_meta" d="M520 190 L560 240" stroke="#000" stroke-width="1.6" fill="none" marker-end="url(#arrow)" stroke-dasharray="6 6">
+    <animate attributeName="stroke-dashoffset" from="0" to="-20" dur="1.8s" repeatCount="indefinite" />
+  </path>
+
+  <!-- Feature -> Scoring -->
+  <path id="p_feat_to_score" d="M780 120 L840 210" stroke="#000" stroke-width="1.6" fill="none" marker-end="url(#arrow)" stroke-dasharray="6 6">
+    <animate attributeName="stroke-dashoffset" from="0" to="-28" dur="2s" repeatCount="indefinite" />
+  </path>
+
+  <!-- Metadata -> Scoring -->
+  <path id="p_meta_to_score" d="M780 240 L840 240" stroke="#000" stroke-width="1.6" fill="none" marker-end="url(#arrow)" stroke-dasharray="6 6">
+    <animate attributeName="stroke-dashoffset" from="0" to="-24" dur="1.8s" repeatCount="indefinite" />
+  </path>
+
+  <!-- Quality model -> Scoring -->
+  <path id="p_quality_to_score" d="M980 120 L960 160 L840 200" stroke="#000" stroke-width="1.4" fill="none" marker-end="url(#arrow)" stroke-dasharray="5 5">
+    <animate attributeName="stroke-dashoffset" from="0" to="-18" dur="1.6s" repeatCount="indefinite" />
+  </path>
+
+  <!-- Scoring -> Token engine -->
+  <path id="p_score_to_token" d="M1060 220 L1120 240" stroke="#000" stroke-width="1.8" fill="none" marker-end="url(#arrow)" stroke-dasharray="6 6">
+    <animate attributeName="stroke-dashoffset" from="0" to="-28" dur="1.5s" repeatCount="indefinite" />
+  </path>
+
+  <!-- Token engine -> Storage/UI -->
+  <path id="p_token_to_out" d="M1180 200 L1180 140" stroke="#000" stroke-width="1.8" fill="none" marker-end="url(#arrow)" stroke-dasharray="6 4">
+    <animate attributeName="stroke-dashoffset" from="0" to="-18" dur="1.2s" repeatCount="indefinite" />
+  </path>
+
+  <!-- Orchestrator -> Preprocess (control path) -->
+  <path id="p_orch_to_pre" d="M410 460 L410 250 L300 250" stroke="#000" stroke-width="1.2" fill="none" marker-end="url(#arrow)" stroke-dasharray="4 4">
+    <animate attributeName="stroke-dashoffset" from="0" to="-12" dur="2.2s" repeatCount="indefinite" />
+  </path>
+
+  <!-- Retrain loop (token -> retrain) -->
+  <path id="p_token_to_retrain" d="M1200 290 L260 460" stroke="#000" stroke-width="1.0" fill="none" marker-end="url(#arrow)" stroke-dasharray="3 6">
+    <animate attributeName="stroke-dashoffset" from="0" to="-10" dur="4s" repeatCount="indefinite" />
+  </path>
+
+  <!-- IUCN External API line -->
+  <path id="p_score_to_iucn" d="M960 200 L1060 380" stroke="#000" stroke-width="1.0" fill="none" marker-end="url(#arrow)" stroke-dasharray="4 4">
+    <animate attributeName="stroke-dashoffset" from="0" to="-12" dur="2.6s" repeatCount="indefinite" />
+  </path>
+
+  <!-- PROCESS DOT moving along main chain (ingest -> token) -->
+  <!-- A single invisible path approximating main flow -->
+  <path id="p_main_motion" d="M260 170 L520 170 L780 170 L1000 200 L1120 240" stroke="none" fill="none"/>
+
+  <circle r="4" fill="#000">
+    <animateMotion dur="5s" repeatCount="indefinite" rotate="auto">
+      <mpath xlink:href="#p_main_motion"/>
+    </animateMotion>
+    <!-- blink while moving -->
+    <animate attributeName="opacity" values="1;0.5;1" dur="1.2s" repeatCount="indefinite"/>
+  </circle>
+
+  <!-- Node pulses when "active" (illustrative, always running in this SVG) -->
+  <rect x="296" y="86" width="228" height="168" rx="8" ry="8" stroke="#000" stroke-width="0.6" fill="none" opacity="0.0">
+    <!-- placeholder overlay for potential CSS/JS hook -->
+  </rect>
+
+  <!-- Minimal legend + mapping to your code -->
+  <g transform="translate(40,530)">
+    <rect x="0" y="0" width="1200" height="160" rx="8" ry="8" stroke="#000" stroke-width="1" fill="none"/>
+    <text x="16" y="24" font-size="13" font-weight="700">Legend & mapping to your React/TSX demo</text>
+
+    <text x="16" y="46" font-size="12">• Waveform & Spectrogram generation → <tspan font-style="italic">generateWaveform</tspan> / <tspan 
+font-style="italic">generateSpectrogram</tspan></text>
+    <text x="16" y="62" font-size="12">• Waveform/Spectrogram UI → <tspan font-style="italic">WaveformViz</tspan>, <tspan font-style="italic">SpectrogramViz</tspan></text>
+
+    <text x="400" y="46" font-size="12">• Sequencing & UI steps → <tspan font-style="italic">startCalculation</tspan> (delays, modal triggers)</text>
+    <text x="400" y="62" font-size="12">• Calculation steps / factors → <tspan font-style="italic">getCalculationSteps</tspan></text>
+
+    <text x="780" y="46" font-size="12">• Token graph & history → <tspan font-style="italic">TokenFlowChart</tspan>, tokenHistory state</text>
+    <text x="780" y="62" font-size="12">• Modal UI & progress → <tspan font-style="italic">Modal</tspan>, <tspan font-style="italic">RadialProgress</tspan>, <tspan 
+font-style="italic">BiodiversityMap</tspan></text>
+
+    <text x="16" y="92" font-size="11">Note: multiplicative pipeline is explicitly implemented in the demo: each step multiplies a runningTotal and the final result is rounded to 
+produce the BIOTOKEN—this flow is represented by the Scoring Aggregator → Tokenization Engine boxes above.</text>
+  </g>
+
+</svg>
+

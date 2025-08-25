@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Tokenización Bioacústica — Flujo Interactivo + Código</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <svg width="36" height="36" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M3 12h4l3 8 4-16 3 8h4" stroke="#00d1b2" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      <div>
+        <h1>Interactivo — Motor de Tokenización Bioacústica (líneas)</h1>
+        <div class="small">Haz clic en cualquier nodo para ver el fragmento de código corregido y la explicación. Pasa el ratón para ver un tooltip breve.</div>
+      </div>
+    </header>
+
+    <div class="grid">
+      <div class="canvas card" id="svgContainer">
+        <!-- Diagrama SVG externo con líneas -->
+        <object id="diagram" type="image/svg+xml" data="diagram.svg" width="100%" height="520"></object>
+      </div>
+
+      <aside class="card" id="panel">
+        <div class="controls">
+          <input id="search" class="search" placeholder="Buscar nodos o errores (ej. .prev, Math.max)" />
+          <button id="diagBtn" class="btn" title="Ejecutar diagnósticos de wallet">Ejecutar Diagnósticos de Wallet</button>
+        </div>
+
+        <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:8px">
+          <div style="display:flex;justify-content:space-between;align-items:center">
+            <div>
+              <div class="small">Conexión de wallet</div>
+              <div id="walletStatus" class="walletStatus muted">No conectado</div>
+            </div>
+            <div style="display:flex;gap:8px">
+              <button id="connectWallet" class="btn">Conectar Wallet</button>
+              <button id="mockConnect" class="btn">Simular</button>
+            </div>
+          </div>
+          <div class="small">
+            Si obtienes <em>Error al conectar con MetaMask</em>, asegúrate de que MetaMask esté instalado y desbloqueado, y permite la conexión cuando se te solicite.
+            Usa <strong>Simular</strong> para ejecutar pruebas locales sin MetaMask.
+          </div>
+        </div>
+
+        <div class="legend">
+          <div><strong>Nodo activo:</strong> <span id="activeName">ninguno</span></div>
+          <div style="margin-top:8px">Haz clic en un nodo para abrir el fragmento de código corregido y una breve explicación.</div>
+        </div>
+
+        <div id="tooltip" class="tooltip" style="display:none;right:24px;top:180px">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+            <div class="node-label" id="tipTitle">Título</div>
+            <button class="close" id="closeTip">×</button>
+          </div>
+          <div class="small" id="tipDesc">Descripción</div>
+          <hr style="border:none;border-top:1px solid rgba(255,255,255,0.03);margin:8px 0" />
+          <pre id="codeBlock">// código</pre>
+          <div id="diagResults" class="diag" style="display:none"></div>
+        </div>
+
+        <div style="margin-top:12px;font-size:13px;color:var(--muted)">
+          <strong>Fuente:</strong> los fragmentos corregidos se derivan de tu archivo subido <em>AppOKBKP.tsx</em> (usado para localizar errores y producir correcciones). Ve el archivo completo en tu espacio de trabajo.
+        </div>
+      </aside>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
