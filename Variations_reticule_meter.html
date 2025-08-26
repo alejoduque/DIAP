@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dynamic Reticule with Controls</title>
+  <style>
+    body {
+      background: #0f2027;
+      margin: 0;
+      font-family: 'Futura', sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      color: #fff;
+    }
+    svg {
+      max-width: 100%;
+    }
+    .controls {
+      display: flex;
+      flex-direction: column;
+      width: 100%;
+      max-width: 600px;
+      padding: 1rem;
+      gap: 0.8rem;
+    }
+    label {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    input[type="range"] {
+      width: 60%;
+    }
+  </style>
+  <link href="https://fonts.googleapis.com/css2?family=Futura&display=swap" rel="stylesheet">
+</head>
+<body>
+  <svg id="reticuleSVG" viewBox="0 0 800 900" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <radialGradient id="coolGrad1" cx="50%" cy="50%" r="50%">
+        <stop offset="0%" style="stop-color:#0f2027" />
+        <stop offset="100%" style="stop-color:#2c5364" />
+      </radialGradient>
+      <filter id="glow1">
+        <feGaussianBlur stdDeviation="6" result="coloredBlur" />
+        <feMerge>
+          <feMergeNode in="coloredBlur" />
+          <feMergeNode in="SourceGraphic" />
+        </feMerge>
+      </filter>
+      <linearGradient id="dynamicTint" x1="0%" y1="0%" x2="100%" y2="0%">
+        <stop offset="0%" stop-color="#ff6b6b" stop-opacity="0.08" />
+        <stop offset="25%" stop-color="#ade8f4" stop-opacity="0.08" />
+        <stop offset="50%" stop-color="#56cfe1" stop-opacity="0.08" />
+        <stop offset="100%" stop-color="#80ed99" stop-opacity="0.08" />
+      </linearGradient>
+    </defs>
+    <rect width="800" height="900" fill="url(#coolGrad1)" />
+    <g transform="translate(400,400)">
+      <g stroke="#8ecae6" stroke-opacity="0.4" fill="none">
+        <circle r="60" />
+        <circle r="90" />
+        <circle r="120" />
+        <circle r="150" />
+        <circle r="180" />
+        <circle r="210" />
+        <circle r="240" />
+      </g>
+      <g stroke="#219ebc" stroke-opacity="0.3">
+        <line x1="0" y1="-240" x2="0" y2="240" />
+        <line x1="-240" y1="0" x2="240" y2="0" />
+        <line x1="-170" y1="-170" x2="170" y2="170" />
+        <line x1="170" y1="-170" x2="-170" y2="170" />
+      </g>
+      <g>
+        <polygon id="spinner" fill="url(#dynamicTint)" stroke="#fff" stroke-width="2" filter="url(#glow1)"></polygon>
+      </g>
+      <text x="0" y="-280" fill="#ff6b6b" font-size="22" text-anchor="middle">GENETIC</text>
+      <text x="0" y="300" fill="#80ed99" font-size="22" text-anchor="middle">ECOSYSTEM</text>
+      <text x="300" y="0" fill="#56cfe1" font-size="22" text-anchor="middle" transform="rotate(90 300 0)">SPECIES</text>
+      <text x="-300" y="0" fill="#ade8f4" font-size="18" text-anchor="middle" transform="rotate(-90 -300 0)">CONNECTIVITY</text>
+      <text x="0" y="-220" fill="#fff" font-size="16" text-anchor="middle">MICROBES</text>
+      <text x="150" y="-150" fill="#fff" font-size="16" text-anchor="middle">ANIMALS</text>
+      <text x="220" y="0" fill="#fff" font-size="16" text-anchor="middle">PLANTS</text>
+      <text x="150" y="150" fill="#fff" font-size="16" text-anchor="middle">HABITATS</text>
+      <text x="0" y="220" fill="#fff" font-size="16" text-anchor="middle">FUNCTION</text>
+      <text x="-150" y="150" fill="#fff" font-size="16" text-anchor="middle">CONNECTIVITY</text>
+      <text x="-220" y="0" fill="#fff" font-size="16" text-anchor="middle">STRUCTURE</text>
+      <text x="-150" y="-150" fill="#fff" font-size="16" text-anchor="middle">MOVEMENT</text>
+    </g>
+  </svg>
+
+  <div class="controls">
+    <label>Spikiness <input type="range" id="spikeRange" min="0" max="150" value="60" /></label>
+    <label>Opacity <input type="range" id="opacityRange" min="0" max="1" step="0.01" value="0.08" /></label>
+    <label>Pulse Speed <input type="range" id="speedRange" min="1" max="300" step="1" value="180" /></label>
+  </div>
+
+  <script>
+    const polygon = document.getElementById("spinner");
+    const spikeRange = document.getElementById("spikeRange");
+    const opacityRange = document.getElementById("opacityRange");
+    const speedRange = document.getElementById("speedRange");
+
+    let currentPoints = [];
+
+    function generateStarPoints(spike = 60) {
+      const base = 180;
+      const newPoints = [];
+      for (let i = 0; i < 8; i++) {
+        const angle = (Math.PI * 2 * i) / 8;
+        const variation = base + (Math.random() - 0.5) * spike * 2;
+        const x = Math.cos(angle) * variation;
+        const y = Math.sin(angle) * variation;
+        newPoints.push({ x, y });
+      }
+      return newPoints;
+    }
+
+    function interpolatePoints(p1, p2, t) {
+      return p1.map((pt, i) => {
+        return {
+          x: pt.x + (p2[i].x - pt.x) * t,
+          y: pt.y + (p2[i].y - pt.y) * t
+        };
+      });
+    }
+
+    function pointsToString(pts) {
+      return pts.map(p => `${p.x.toFixed(2)},${p.y.toFixed(2)}`).join(" ");
+    }
+
+    let targetPoints = generateStarPoints();
+    currentPoints = targetPoints.map(p => ({ ...p }));
+    let tick = 0;
+
+    function animate() {
+      const spikeVal = parseFloat(spikeRange.value);
+      const opacityVal = parseFloat(opacityRange.value);
+      const speedVal = parseInt(speedRange.value);
+
+      tick++;
+      if (tick % speedVal === 0) {
+        targetPoints = generateStarPoints(spikeVal);
+      }
+
+      currentPoints = interpolatePoints(currentPoints, targetPoints, 0.03);
+      polygon.setAttribute("points", pointsToString(currentPoints));
+      polygon.setAttribute("fill-opacity", opacityVal);
+
+      requestAnimationFrame(animate);
+    }
+
+    animate();
+  </script>
+</body>
+</html>

@@ -1,0 +1,631 @@
+<?xml version="1.0" encoding="utf-8"?>
+<svg id="parliament-biotoken"
+     xmlns="http://www.w3.org/2000/svg"
+     viewBox="0 0 1400 800"
+     width="100%" height="100vh"
+     style="display: block; margin: 0; padding: 0; background: #0f2027; min-height: 100vh;"
+     aria-labelledby="title desc" role="img">
+  <title id="title">Framework Bio-Token V2.0: Parlamento Ecológico</title>
+  <desc id="desc">Democracia Multi-Especies con controles interactivos y animaciones vectoriales</desc>
+
+  <!-- Fondo que cubre toda la página -->
+  <rect width="100%" height="100%" fill="url(#coolGrad1)"/>
+  
+  <defs>
+    <!-- Gradientes oceánicos del archivo HTML -->
+    <radialGradient id="coolGrad1" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" style="stop-color:#0f2027" />
+      <stop offset="100%" style="stop-color:#2c5364" />
+    </radialGradient>
+    
+    <linearGradient id="dynamicTint" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#1e3a8a" stop-opacity="0.08" />
+      <stop offset="25%" stop-color="#ade8f4" stop-opacity="0.08" />
+      <stop offset="50%" stop-color="#56cfe1" stop-opacity="0.08" />
+      <stop offset="100%" stop-color="#80ed99" stop-opacity="0.08" />
+    </linearGradient>
+
+    <!-- Filtros de brillo -->
+    <filter id="glow1">
+      <feGaussianBlur stdDeviation="6" result="coloredBlur" />
+      <feMerge>
+        <feMergeNode in="coloredBlur" />
+        <feMergeNode in="SourceGraphic" />
+      </feMerge>
+    </filter>
+
+    <filter id="softGlow">
+      <feGaussianBlur stdDeviation="3" result="coloredBlur" />
+      <feMerge>
+        <feMergeNode in="coloredBlur" />
+        <feMergeNode in="SourceGraphic" />
+      </feMerge>
+    </filter>
+
+    <!-- Marcadores para flujos -->
+    <marker id="flowArrow" markerWidth="8" markerHeight="8" refX="8" refY="4" orient="auto">
+      <path d="M0 0 L8 4 L0 8 z" fill="#8ecae6" opacity="0.8"/>
+    </marker>
+
+    <style><![CDATA[
+      /* Tipografía Futura como en el HTML */
+      .title-main { 
+        fill: #fff; 
+        font-family: 'Futura', Arial, sans-serif; 
+        font-size: 22px; 
+        font-weight: bold; 
+        text-anchor: middle;
+      }
+      
+      .title-section { 
+        fill: #bfdbfe; 
+        font-family: 'Futura', Arial, sans-serif; 
+        font-size: 16px; 
+        font-weight: bold;
+        text-anchor: middle;
+      }
+      
+      .label-distributed { 
+        fill: #fff; 
+        font-family: 'Futura', Arial, sans-serif; 
+        font-size: 14px; 
+        font-weight: bold;
+        text-anchor: middle;
+      }
+      
+      .text-data { 
+        fill: #ade8f4; 
+        font-family: 'Futura', Arial, sans-serif; 
+        font-size: 10px;
+        text-anchor: middle;
+      }
+      
+      .text-emphasis { 
+        fill: #1e3a8a; 
+        font-family: 'Futura', Arial, sans-serif; 
+        font-size: 12px; 
+        font-weight: bold;
+        text-anchor: middle;
+      }
+      
+      .text-success { 
+        fill: #80ed99; 
+        font-family: 'Futura', Arial, sans-serif; 
+        font-size: 12px; 
+        font-weight: bold;
+        text-anchor: middle;
+      }
+
+      /* Elementos interactivos */
+      .species-seat { 
+        cursor: pointer; 
+      }
+
+      /* Control panel styles */
+      .control-panel {
+        font-family: 'Futura', Arial, sans-serif;
+        color: #fff;
+        background: rgba(15, 32, 39, 0.9);
+        border-radius: 10px;
+        border: 2px solid #8ecae6;
+        padding: 20px;
+      }
+      
+      .control-label {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin: 12px 0;
+        color: #8ecae6;
+      }
+      
+      input[type="range"] {
+        width: 60%;
+      }
+      
+      .metrics-box {
+        margin: 15px 0;
+        padding: 12px;
+        border-radius: 8px;
+        font-size: 12px;
+        line-height: 1.4;
+      }
+      
+      .voting-box {
+        background: rgba(32, 178, 170, 0.1);
+        border: 1px solid #20b2aa;
+      }
+      
+      .ecosystem-box {
+        background: rgba(86, 207, 225, 0.1);
+        border: 1px solid #56cfe1;
+      }
+      
+      .instructions {
+        font-size: 10px;
+        color: #8ecae6;
+        line-height: 1.3;
+        margin-top: 15px;
+      }
+
+      /* Puntos parlamentarios pulsantes */
+      .parliament-dot {
+        cursor: pointer;
+        transition: all 0.3s ease;
+      }
+      
+      .parliament-dot:hover {
+        filter: url(#softGlow);
+      }
+      
+      /* Pulsación por nivel */
+      .level-1 .parliament-dot { animation: pulse-level1 2s ease-in-out infinite; }
+      .level-2 .parliament-dot { animation: pulse-level2 2.5s ease-in-out infinite; }
+      .level-3 .parliament-dot { animation: pulse-level3 3s ease-in-out infinite; }
+      .level-4 .parliament-dot { animation: pulse-level4 3.5s ease-in-out infinite; }
+      .level-5 .parliament-dot { animation: pulse-level5 4s ease-in-out infinite; }
+      .level-6 .parliament-dot { animation: pulse-level6 4.5s ease-in-out infinite; }
+      .level-7 .parliament-dot { animation: pulse-level7 5s ease-in-out infinite; }
+      
+      @keyframes pulse-level1 {
+        0%, 100% { opacity: 0.8; transform: scale(1); }
+        50% { opacity: 1; transform: scale(1.2); }
+      }
+      
+      @keyframes pulse-level2 {
+        0%, 100% { opacity: 0.7; transform: scale(1); }
+        50% { opacity: 1; transform: scale(1.15); }
+      }
+      
+      @keyframes pulse-level3 {
+        0%, 100% { opacity: 0.6; transform: scale(1); }
+        50% { opacity: 0.9; transform: scale(1.1); }
+      }
+      
+      @keyframes pulse-level4 {
+        0%, 100% { opacity: 0.6; transform: scale(1); }
+        50% { opacity: 0.85; transform: scale(1.08); }
+      }
+      
+      @keyframes pulse-level5 {
+        0%, 100% { opacity: 0.5; transform: scale(1); }
+        50% { opacity: 0.8; transform: scale(1.06); }
+      }
+      
+      @keyframes pulse-level6 {
+        0%, 100% { opacity: 0.4; transform: scale(1); }
+        50% { opacity: 0.7; transform: scale(1.04); }
+      }
+      
+      @keyframes pulse-level7 {
+        0%, 100% { opacity: 0.3; transform: scale(1); }
+        50% { opacity: 0.6; transform: scale(1.02); }
+      }
+      
+      /* Rotación del parlamento */
+      .parliament-seats {
+        animation: rotateParliament 30s linear infinite;
+        transform-origin: 0 0;
+      }
+      
+      @keyframes rotateParliament {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+      }
+
+      /* Pulsación de especies */
+      .species-seat circle {
+        animation: speciesPulse 3s ease-in-out infinite;
+      }
+      
+      @keyframes speciesPulse {
+        0%, 100% { opacity: 0.6; }
+        50% { opacity: 1; }
+      }
+    ]]></style>
+  </defs>
+
+  <!-- Título principal -->
+  <text x="400" y="50" class="title-main">PARLAMENTO ECOLÓGICO MULTI-ESPECIES</text>
+  <text x="400" y="75" class="text-data">Framework Bio-Token V2.0 • Actor-Network Theory • Algorand Blockchain</text>
+
+  <!-- Sistema parlamentario con círculos concéntricos -->
+  <g transform="translate(400,400)">
+    
+    <!-- Retícula de fondo (como en el HTML original) -->
+    <g stroke="#8ecae6" stroke-opacity="0.4" fill="none">
+      <circle r="60" />
+      <circle r="90" />
+      <circle r="120" />
+      <circle r="150" />
+      <circle r="180" />
+      <circle r="210" />
+      <circle r="240" />
+    </g>
+    
+    <!-- Líneas radiales -->
+    <g stroke="#219ebc" stroke-opacity="0.3">
+      <line x1="0" y1="-240" x2="0" y2="240" />
+      <line x1="-240" y1="0" x2="240" y2="0" />
+      <line x1="-170" y1="-170" x2="170" y2="170" />
+      <line x1="170" y1="-170" x2="-170" y2="170" />
+    </g>
+
+    <!-- Polígono central dinámico (como el HTML) -->
+    <polygon id="spinner" 
+             fill="url(#dynamicTint)" 
+             stroke="#fff" 
+             stroke-width="2" 
+             filter="url(#glow1)">
+    </polygon>
+    
+    <!-- Asientos parlamentarios circulares -->
+    <g class="parliament-seats">
+      <!-- Ara macao (Norte) -->
+      <g class="species-seat" transform="rotate(0) translate(0,-150)">
+        <circle r="20" fill="#3b82f6" fill-opacity="0.3" stroke="#3b82f6" stroke-width="3"/>
+        <text y="-25" class="label-distributed">ARA MACAO</text>
+        <text y="35" style="fill: #f0f9ff; font-family: 'Futura', Arial, sans-serif; font-size: 12px; font-weight: bold; text-anchor: middle;">15 VOTOS</text>
+        <text y="48" class="text-data">VU</text>
+      </g>
+
+      <!-- Atlapetes flaviceps (Noreste) -->
+      <g class="species-seat" transform="rotate(72) translate(0,-150)">
+        <circle r="25" fill="#20b2aa" fill-opacity="0.4" stroke="#20b2aa" stroke-width="3"/>
+        <text y="-30" class="label-distributed">ATLAPETES</text>
+        <text y="40" style="fill: #f0f9ff; font-family: 'Futura', Arial, sans-serif; font-size: 12px; font-weight: bold; text-anchor: middle;">25 VOTOS</text>
+        <text y="53" style="fill: #f0f9ff; font-family: 'Futura', Arial, sans-serif; font-size: 12px; font-weight: bold; text-anchor: middle;">CR</text>
+      </g>
+
+      <!-- Cecropia (Sureste) -->
+      <g class="species-seat" transform="rotate(144) translate(0,-150)">
+        <circle r="22" fill="#80ed99" fill-opacity="0.3" stroke="#80ed99" stroke-width="3"/>
+        <text y="-28" class="label-distributed">CECROPIA</text>
+        <text y="38" class="text-success">20 VOTOS</text>
+        <text y="51" class="text-data">LC</text>
+      </g>
+
+      <!-- Alouatta (Sur) -->
+      <g class="species-seat" transform="rotate(216) translate(0,-150)">
+        <circle r="18" fill="#56cfe1" fill-opacity="0.3" stroke="#56cfe1" stroke-width="3"/>
+        <text y="-26" class="label-distributed">ALOUATTA</text>
+        <text y="36" class="text-data">12 VOTOS</text>
+        <text y="49" class="text-data">LC</text>
+      </g>
+
+      <!-- Tinamus (Noroeste) -->
+      <g class="species-seat" transform="rotate(288) translate(0,-150)">
+        <circle r="16" fill="#ade8f4" fill-opacity="0.3" stroke="#ade8f4" stroke-width="3"/>
+        <text y="-24" class="label-distributed">TINAMUS</text>
+        <text y="34" class="text-data">8 VOTOS</text>
+        <text y="47" class="text-data">LC</text>
+      </g>
+    </g>
+
+    <!-- Escaños como puntos pulsantes sobre las líneas de círculos -->
+    <!-- Nivel 1: r=60 - Núcleo (2 puntos) -->
+    <g class="parliament-dots level-1">
+      <circle class="parliament-dot" data-species="atlapetes" cx="0" cy="-60" r="4" fill="#20b2aa" opacity="0.6"/>
+      <circle class="parliament-dot" data-species="atlapetes" cx="0" cy="60" r="4" fill="#20b2aa" opacity="0.6"/>
+    </g>
+    
+    <!-- Nivel 2: r=90 - Interior (4 puntos) -->
+    <g class="parliament-dots level-2">
+      <circle class="parliament-dot" data-species="ara" cx="0" cy="-90" r="4" fill="#3b82f6" opacity="0.6"/>
+      <circle class="parliament-dot" data-species="ara" cx="90" cy="0" r="4" fill="#3b82f6" opacity="0.6"/>
+      <circle class="parliament-dot" data-species="ara" cx="0" cy="90" r="4" fill="#3b82f6" opacity="0.6"/>
+      <circle class="parliament-dot" data-species="ara" cx="-90" cy="0" r="4" fill="#3b82f6" opacity="0.6"/>
+    </g>
+    
+    <!-- Nivel 3: r=120 - Medio (6 puntos) -->
+    <g class="parliament-dots level-3">
+      <circle class="parliament-dot" data-species="cecropia" cx="0" cy="-120" r="4" fill="#80ed99" opacity="0.6"/>
+      <circle class="parliament-dot" data-species="cecropia" cx="104" cy="-60" r="4" fill="#80ed99" opacity="0.6"/>
+      <circle class="parliament-dot" data-species="cecropia" cx="104" cy="60" r="4" fill="#80ed99" opacity="0.6"/>
+      <circle class="parliament-dot" data-species="cecropia" cx="0" cy="120" r="4" fill="#80ed99" opacity="0.6"/>
+      <circle class="parliament-dot" data-species="cecropia" cx="-104" cy="60" r="4" fill="#80ed99" opacity="0.6"/>
+      <circle class="parliament-dot" data-species="cecropia" cx="-104" cy="-60" r="4" fill="#80ed99" opacity="0.6"/>
+    </g>
+    
+    <!-- Nivel 4: r=150 - Exterior (8 puntos) -->
+    <g class="parliament-dots level-4">
+      <circle class="parliament-dot" data-species="alouatta" cx="0" cy="-150" r="3" fill="#56cfe1" opacity="0.6"/>
+      <circle class="parliament-dot" data-species="alouatta" cx="106" cy="-106" r="3" fill="#56cfe1" opacity="0.6"/>
+      <circle class="parliament-dot" data-species="quetzal" cx="150" cy="0" r="3" fill="#fbbf24" opacity="0.6"/>
+      <circle class="parliament-dot" data-species="quetzal" cx="106" cy="106" r="3" fill="#fbbf24" opacity="0.6"/>
+      <circle class="parliament-dot" data-species="jaguar" cx="0" cy="150" r="3" fill="#f59e0b" opacity="0.6"/>
+      <circle class="parliament-dot" data-species="rana" cx="-106" cy="106" r="3" fill="#eab308" opacity="0.6"/>
+      <circle class="parliament-dot" data-species="tinamus" cx="-150" cy="0" r="3" fill="#ade8f4" opacity="0.6"/>
+      <circle class="parliament-dot" data-species="tinamus" cx="-106" cy="-106" r="3" fill="#ade8f4" opacity="0.6"/>
+    </g>
+    
+    <!-- Nivel 5: r=180 - Expansión (10 puntos) -->
+    <g class="parliament-dots level-5">
+      <circle class="parliament-dot" data-species="atlapetes" cx="0" cy="-180" r="3" fill="#20b2aa" opacity="0.5"/>
+      <circle class="parliament-dot" data-species="atlapetes" cx="127" cy="-127" r="3" fill="#20b2aa" opacity="0.5"/>
+      <circle class="parliament-dot" data-species="ara" cx="180" cy="0" r="3" fill="#3b82f6" opacity="0.5"/>
+      <circle class="parliament-dot" data-species="ara" cx="127" cy="127" r="3" fill="#3b82f6" opacity="0.5"/>
+      <circle class="parliament-dot" data-species="cecropia" cx="0" cy="180" r="3" fill="#80ed99" opacity="0.5"/>
+      <circle class="parliament-dot" data-species="cecropia" cx="-127" cy="127" r="3" fill="#80ed99" opacity="0.5"/>
+      <circle class="parliament-dot" data-species="alouatta" cx="-180" cy="0" r="3" fill="#56cfe1" opacity="0.5"/>
+      <circle class="parliament-dot" data-species="quetzal" cx="-127" cy="-127" r="3" fill="#fbbf24" opacity="0.5"/>
+      <circle class="parliament-dot" data-species="jaguar" cx="-64" cy="-170" r="3" fill="#f59e0b" opacity="0.5"/>
+      <circle class="parliament-dot" data-species="rana" cx="64" cy="-170" r="3" fill="#eab308" opacity="0.5"/>
+    </g>
+    
+    <!-- Nivel 6: r=210 - Periferia (12 puntos) -->
+    <g class="parliament-dots level-6">
+      <circle class="parliament-dot" data-species="atlapetes" cx="0" cy="-210" r="2" fill="#20b2aa" opacity="0.4"/>
+      <circle class="parliament-dot" data-species="atlapetes" cx="105" cy="-182" r="2" fill="#20b2aa" opacity="0.4"/>
+      <circle class="parliament-dot" data-species="ara" cx="182" cy="-105" r="2" fill="#3b82f6" opacity="0.4"/>
+      <circle class="parliament-dot" data-species="ara" cx="210" cy="0" r="2" fill="#3b82f6" opacity="0.4"/>
+      <circle class="parliament-dot" data-species="cecropia" cx="182" cy="105" r="2" fill="#80ed99" opacity="0.4"/>
+      <circle class="parliament-dot" data-species="cecropia" cx="105" cy="182" r="2" fill="#80ed99" opacity="0.4"/>
+      <circle class="parliament-dot" data-species="cecropia" cx="0" cy="210" r="2" fill="#80ed99" opacity="0.4"/>
+      <circle class="parliament-dot" data-species="alouatta" cx="-105" cy="182" r="2" fill="#56cfe1" opacity="0.4"/>
+      <circle class="parliament-dot" data-species="quetzal" cx="-182" cy="105" r="2" fill="#fbbf24" opacity="0.4"/>
+      <circle class="parliament-dot" data-species="jaguar" cx="-210" cy="0" r="2" fill="#f59e0b" opacity="0.4"/>
+      <circle class="parliament-dot" data-species="rana" cx="-182" cy="-105" r="2" fill="#eab308" opacity="0.4"/>
+      <circle class="parliament-dot" data-species="tinamus" cx="-105" cy="-182" r="2" fill="#ade8f4" opacity="0.4"/>
+    </g>
+    
+    <!-- Nivel 7: r=240 - Extremo (16 puntos) -->
+    <g class="parliament-dots level-7">
+      <circle class="parliament-dot" data-species="atlapetes" cx="0" cy="-240" r="2" fill="#20b2aa" opacity="0.3"/>
+      <circle class="parliament-dot" data-species="atlapetes" cx="85" cy="-226" r="2" fill="#20b2aa" opacity="0.3"/>
+      <circle class="parliament-dot" data-species="atlapetes" cx="170" cy="-170" r="2" fill="#20b2aa" opacity="0.3"/>
+      <circle class="parliament-dot" data-species="ara" cx="226" cy="-85" r="2" fill="#3b82f6" opacity="0.3"/>
+      <circle class="parliament-dot" data-species="ara" cx="240" cy="0" r="2" fill="#3b82f6" opacity="0.3"/>
+      <circle class="parliament-dot" data-species="ara" cx="226" cy="85" r="2" fill="#3b82f6" opacity="0.3"/>
+      <circle class="parliament-dot" data-species="cecropia" cx="170" cy="170" r="2" fill="#80ed99" opacity="0.3"/>
+      <circle class="parliament-dot" data-species="cecropia" cx="85" cy="226" r="2" fill="#80ed99" opacity="0.3"/>
+      <circle class="parliament-dot" data-species="cecropia" cx="0" cy="240" r="2" fill="#80ed99" opacity="0.3"/>
+      <circle class="parliament-dot" data-species="cecropia" cx="-85" cy="226" r="2" fill="#80ed99" opacity="0.3"/>
+      <circle class="parliament-dot" data-species="alouatta" cx="-170" cy="170" r="2" fill="#56cfe1" opacity="0.3"/>
+      <circle class="parliament-dot" data-species="quetzal" cx="-226" cy="85" r="2" fill="#fbbf24" opacity="0.3"/>
+      <circle class="parliament-dot" data-species="jaguar" cx="-240" cy="0" r="2" fill="#f59e0b" opacity="0.3"/>
+      <circle class="parliament-dot" data-species="rana" cx="-226" cy="-85" r="2" fill="#eab308" opacity="0.3"/>
+      <circle class="parliament-dot" data-species="tinamus" cx="-170" cy="-170" r="2" fill="#ade8f4" opacity="0.3"/>
+      <circle class="parliament-dot" data-species="tinamus" cx="-85" cy="-226" r="2" fill="#ade8f4" opacity="0.3"/>
+    </g>
+
+    <!-- Etiquetas distribuidas radialmente (NO LISTADAS) -->
+    <text x="0" y="-280" class="title-section">BIODIVERSIDAD</text>
+    <text x="280" y="0" class="title-section" transform="rotate(90 280 0)">CONECTIVIDAD</text>
+    <text x="0" y="300" class="title-section">GOBERNANZA</text>
+    <text x="-280" y="0" class="title-section" transform="rotate(-90 -280 0)">CONSERVACIÓN</text>
+    
+    <!-- Etiquetas secundarias distribuidas -->
+    <text x="200" y="-200" class="text-data" transform="rotate(45 200 -200)">ESPECIES CRÍTICAS</text>
+    <text x="200" y="200" class="text-data" transform="rotate(-45 200 200)">RED ECOLÓGICA</text>
+    <text x="-200" y="200" class="text-data" transform="rotate(45 -200 200)">PROPUESTAS</text>
+    <text x="-200" y="-200" class="text-data" transform="rotate(-45 -200 -200)">COMUNIDAD</text>
+    <text x="0" y="-220" class="text-data">ECOSISTEMA</text>
+  </g>
+
+  <!-- Panel de controles en el espacio derecho -->
+  <foreignObject x="850" y="100" width="500" height="650">
+    <div xmlns="http://www.w3.org/1999/xhtml" class="control-panel">
+      <h3 style="color: #e0f2fe; margin-top: 0; text-align: center;">CONTROLES PARLAMENTARIOS</h3>
+      
+      <label class="control-label">
+        Intensidad Polígono:
+        <input type="range" id="spikeRange" min="0" max="150" value="60" />
+      </label>
+      
+      <label class="control-label">
+        Opacidad:
+        <input type="range" id="opacityRange" min="0" max="1" step="0.01" value="0.08" />
+      </label>
+      
+      <label class="control-label">
+        Velocidad Pulso:
+        <input type="range" id="speedRange" min="1" max="300" step="1" value="180" />
+      </label>
+      
+      <label class="control-label">
+        Velocidad Rotación:
+        <input type="range" id="rotationSpeed" min="0.1" max="2" step="0.1" value="1" />
+      </label>
+      
+      <div class="metrics-box voting-box">
+        <h4 style="color: #e0f2fe; margin: 0 0 10px 0;">ESTADO VOTACIÓN</h4>
+        <div>Propuesta Activa: <span style="color: #80ed99;">Corredor Acústico</span></div>
+        <div>Participación: <span id="participationLevel">75%</span></div>
+        <div>Consenso: <span id="consensusLevel">En desarrollo</span></div>
+      </div>
+      
+      <div class="metrics-box ecosystem-box">
+        <h4 style="color: #56cfe1; margin: 0 0 10px 0;">MÉTRICAS ECOSISTEMA</h4>
+        <div>Biodiversidad: <span style="color: #80ed99;">75%</span></div>
+        <div>Conectividad: <span style="color: #56cfe1;">68%</span></div>
+        <div>Estabilidad: <span style="color: #80ed99;">82%</span></div>
+        <div>Amenazas: <span style="color: #20b2aa;">35%</span></div>
+      </div>
+      
+      <div style="font-size: 1.5px; color: #8ecae6; line-height: 0.9; margin-top: 15px;">
+        <strong>Controles:</strong><br/>
+        • Arrastra controles para ajustar parámetros<br/>
+        • Click puntos parlamentarios para votar<br/>
+        • ESPACIO: pausa/reanuda animaciones<br/>
+        • Polígono central cambia de forma dinámicamente<br/>
+        • 58 escaños totales en 7 niveles concéntricos
+      </div>
+    </div>
+  </foreignObject>
+
+  <!-- Información adicional inferior -->
+  <g transform="translate(50,720)">
+    <rect x="0" y="0" width="750" height="60" rx="8" fill="#0f2027" fill-opacity="0.8" stroke="#8ecae6" stroke-width="1"/>
+    <text x="375" y="25" style="fill: #e0f2fe; font-family: 'Futura', Arial, sans-serif; font-size: 12px; font-weight: bold; text-anchor: middle;">TEORÍA ACTOR-RED:</text>
+    <text x="375" y="40" class="text-data">Simetría humano/no-humano • Presencia acústica = participación • Blockchain como mediador</text>
+    <text x="375" y="55" class="text-data">Primera implementación mundial de democracia multi-especies en blockchain</text>
+  </g>
+
+  <!-- Información de Blockchain Algorand -->
+  <g transform="translate(850,720)">
+    <rect x="0" y="0" width="500" height="60" rx="8" fill="#0f2027" fill-opacity="0.8" stroke="#20b2aa" stroke-width="1"/>
+    <text x="250" y="20" style="fill: #f0f9ff; font-family: 'Futura', Arial, sans-serif; font-size: 12px; font-weight: bold; text-anchor: middle;">ALGORAND TESTNET</text>
+    <text x="250" y="35" class="text-data">Tokens: 1,247 • ASAs: 23 • Propuestas: 8 • Participación: 89%</text>
+    <text x="250" y="50" class="text-data">Primera demostración mundial de democracia blockchain multi-especies</text>
+  </g>
+
+  <!-- JavaScript simplificado y funcional -->
+  <script><![CDATA[
+    (function() {
+      const polygon = document.getElementById("spinner");
+      const spikeRange = document.getElementById("spikeRange");
+      const opacityRange = document.getElementById("opacityRange");  
+      const speedRange = document.getElementById("speedRange");
+      const rotationSpeed = document.getElementById("rotationSpeed");
+      const participationDisplay = document.getElementById("participationLevel");
+      const consensusDisplay = document.getElementById("consensusLevel");
+
+      let currentPoints = [];
+      let participation = 75;
+      let animationsPaused = false;
+
+      // Generar puntos dinámicos
+      function generateStarPoints(spike = 60) {
+        const base = 150; // Aumentado para cubrir más círculos concéntricos
+        const newPoints = [];
+        for (let i = 0; i < 8; i++) {
+          const angle = (Math.PI * 2 * i) / 8;
+          const variation = base + (Math.random() - 0.5) * spike;
+          const x = Math.cos(angle) * variation;
+          const y = Math.sin(angle) * variation;
+          newPoints.push({ x, y });
+        }
+        return newPoints;
+      }
+
+      function interpolatePoints(p1, p2, t) {
+        return p1.map((pt, i) => ({
+          x: pt.x + (p2[i].x - pt.x) * t,
+          y: pt.y + (p2[i].y - pt.y) * t
+        }));
+      }
+
+      function pointsToString(pts) {
+        return pts.map(p => `${p.x.toFixed(2)},${p.y.toFixed(2)}`).join(" ");
+      }
+
+      let targetPoints = generateStarPoints();
+      currentPoints = targetPoints.map(p => ({ ...p }));
+      let tick = 0;
+
+      function animate() {
+        if (!animationsPaused && polygon) {
+          const spikeVal = parseFloat(spikeRange?.value || 60);
+          const opacityVal = parseFloat(opacityRange?.value || 0.08);
+          const speedVal = parseInt(speedRange?.value || 180);
+
+          tick++;
+          if (tick % speedVal === 0) {
+            targetPoints = generateStarPoints(spikeVal);
+          }
+
+          currentPoints = interpolatePoints(currentPoints, targetPoints, 0.03);
+          polygon.setAttribute("points", pointsToString(currentPoints));
+          polygon.setAttribute("fill-opacity", opacityVal);
+        }
+        requestAnimationFrame(animate);
+      }
+
+      // Control de velocidad de rotación
+      if (rotationSpeed) {
+        rotationSpeed.addEventListener('input', function() {
+          const speed = parseFloat(this.value);
+          updateRotationSpeed(speed);
+        });
+      }
+
+      function updateRotationSpeed(speed) {
+        // Actualizar rotación del parlamento
+        const parliamentSeats = document.querySelector('.parliament-seats');
+        if (parliamentSeats) {
+          parliamentSeats.style.animationDuration = `${30 / speed}s`;
+        }
+        
+        // Actualizar velocidad de pulsación de todos los niveles
+        const levels = ['level-1', 'level-2', 'level-3', 'level-4', 'level-5', 'level-6', 'level-7'];
+        levels.forEach((level, index) => {
+          const levelGroup = document.querySelector(`.${level}`);
+          if (levelGroup) {
+            const baseDuration = 2 + (index * 0.5); // 2s, 2.5s, 3s, etc.
+            levelGroup.style.animationDuration = `${baseDuration / speed}s`;
+          }
+          
+          // También actualizar los puntos individuales
+          const dots = document.querySelectorAll(`.${level} .parliament-dot`);
+          dots.forEach(dot => {
+            const baseDuration = 2 + (index * 0.5);
+            dot.style.animationDuration = `${baseDuration / speed}s`;
+          });
+        });
+      }
+
+      // Interactividad de puntos parlamentarios
+      const parliamentDots = document.querySelectorAll('.parliament-dot');
+      parliamentDots.forEach(dot => {
+        dot.addEventListener('click', function() {
+          participation = Math.min(100, participation + 1);
+          if (participationDisplay) {
+            participationDisplay.textContent = `${participation}%`;
+          }
+          
+          if (participation >= 90 && consensusDisplay) {
+            consensusDisplay.textContent = 'CONSENSO ALCANZADO';
+            consensusDisplay.style.color = '#80ed99';
+          }
+          
+          // Efecto visual en el punto
+          const originalOpacity = this.getAttribute('opacity');
+          const originalRadius = this.getAttribute('r');
+          
+          this.setAttribute('opacity', '1');
+          this.setAttribute('r', parseFloat(originalRadius) * 2);
+          this.setAttribute('stroke', '#fff');
+          this.setAttribute('stroke-width', '2');
+          this.style.filter = 'url(#glow1)';
+          
+          setTimeout(() => {
+            this.setAttribute('opacity', originalOpacity);
+            this.setAttribute('r', originalRadius);
+            this.removeAttribute('stroke');
+            this.removeAttribute('stroke-width');
+            this.style.filter = '';
+          }, 2000);
+          
+          const species = this.getAttribute('data-species');
+          console.log(`🗳️ Voto registrado: ${species} - Participación: ${participation}%`);
+        });
+      });
+
+      // Control de teclado
+      document.addEventListener('keydown', function(e) {
+        if (e.code === 'Space') {
+          e.preventDefault();
+          animationsPaused = !animationsPaused;
+          
+          const allAnimated = document.querySelectorAll('.parliament-seats, .parliament-dot, .parliament-dots');
+          allAnimated.forEach(el => {
+            el.style.animationPlayState = animationsPaused ? 'paused' : 'running';
+          });
+          
+          console.log(animationsPaused ? '⏸️ Parlamento pausado' : '▶️ Parlamento activo');
+        }
+      });
+
+      // Inicializar velocidad de rotación
+      updateRotationSpeed(1);
+      
+      // Iniciar
+      animate();
+      console.log('🏛️ Parlamento Ecológico Multi-Especies cargado');
+      console.log('🗳️ Click en puntos parlamentarios para votar - ESPACIO pausa/reanuda');
+      console.log('🎛️ Total escaños: ' + parliamentDots.length + ' | 7 niveles concéntricos | 8 especies');
+      console.log('⚡ Control rotación: 0.1x (lento) a 2x (rápido)');
+    })();
+  ]]></script>
+</svg>

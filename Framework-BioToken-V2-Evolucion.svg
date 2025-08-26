@@ -1,0 +1,517 @@
+<?xml version="1.0" encoding="utf-8"?>
+<svg id="biotoken-evolution"
+     xmlns="http://www.w3.org/2000/svg"
+     viewBox="0 0 1600 1000"
+     width="1600" height="1000"
+     aria-labelledby="title desc" role="img">
+  <title id="title">Framework Bio-Token V2.0: Evolución hacia Parlamento Ecológico</title>
+  <desc id="desc">Diagrama interactivo mostrando la evolución desde bio-tokens individuales hasta gobernanza multi-especies basada en Teoría Actor-Red</desc>
+
+  <defs>
+    <!-- Gradientes de fondo -->
+    <linearGradient id="bg-evolution" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#0a0f1c;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#1a2332;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#2d3748;stop-opacity:1" />
+    </linearGradient>
+
+    <!-- Gradientes para secciones -->
+    <linearGradient id="level1-bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#065f46;stop-opacity:0.2" />
+      <stop offset="100%" style="stop-color:#047857;stop-opacity:0.4" />
+    </linearGradient>
+
+    <linearGradient id="level2-bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#1e40af;stop-opacity:0.2" />
+      <stop offset="100%" style="stop-color:#2563eb;stop-opacity:0.4" />
+    </linearGradient>
+
+    <linearGradient id="level3-bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#7c2d12;stop-opacity:0.2" />
+      <stop offset="100%" style="stop-color:#dc2626;stop-opacity:0.4" />
+    </linearGradient>
+
+    <!-- Flechas de evolución -->
+    <marker id="evolution-arrow" markerWidth="15" markerHeight="15" refX="15" refY="7.5" orient="auto">
+      <path d="M0 0 L15 7.5 L0 15 z" fill="#f59e0b" opacity="0.8"/>
+    </marker>
+
+    <!-- Flechas de flujo por nivel -->
+    <marker id="arrow-level1" markerWidth="8" markerHeight="8" refX="8" refY="4" orient="auto">
+      <path d="M0 0 L8 4 L0 8 z" fill="#22c55e"/>
+    </marker>
+
+    <marker id="arrow-level2" markerWidth="8" markerHeight="8" refX="8" refY="4" orient="auto">
+      <path d="M0 0 L8 4 L0 8 z" fill="#3b82f6"/>
+    </marker>
+
+    <marker id="arrow-level3" markerWidth="8" markerHeight="8" refX="8" refY="4" orient="auto">
+      <path d="M0 0 L8 4 L0 8 z" fill="#ef4444"/>
+    </marker>
+
+    <!-- Efectos de brillo -->
+    <filter id="glow-soft" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur in="SourceGraphic" stdDeviation="3" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+
+    <filter id="glow-strong" x="-100%" y="-100%" width="300%" height="300%">
+      <feGaussianBlur in="SourceGraphic" stdDeviation="6" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+
+    <!-- Patrones para representar sonido -->
+    <pattern id="soundwave" patternUnits="userSpaceOnUse" width="20" height="10">
+      <path d="M0 5 Q5 0 10 5 Q15 10 20 5" stroke="#22c55e" stroke-width="1" fill="none" opacity="0.6"/>
+    </pattern>
+
+    <!-- Patrón de red -->
+    <pattern id="network-pattern" patternUnits="userSpaceOnUse" width="40" height="40">
+      <circle cx="20" cy="20" r="2" fill="#3b82f6" opacity="0.3"/>
+      <circle cx="0" cy="0" r="1" fill="#3b82f6" opacity="0.2"/>
+      <circle cx="40" cy="0" r="1" fill="#3b82f6" opacity="0.2"/>
+      <circle cx="0" cy="40" r="1" fill="#3b82f6" opacity="0.2"/>
+      <circle cx="40" cy="40" r="1" fill="#3b82f6" opacity="0.2"/>
+    </pattern>
+
+    <style><![CDATA[
+      /* Estilos base */
+      .title-main { fill: #f8fafc; font-family: 'Inter', Arial, sans-serif; font-size: 24px; font-weight: 800; }
+      .title-section { fill: #e2e8f0; font-family: 'Inter', Arial, sans-serif; font-size: 18px; font-weight: 700; }
+      .title-node { fill: #f1f5f9; font-family: 'Inter', Arial, sans-serif; font-size: 14px; font-weight: 600; }
+      .text-detail { fill: #cbd5e1; font-family: 'Inter', Arial, sans-serif; font-size: 11px; font-weight: 400; }
+      .text-emphasis { fill: #fbbf24; font-family: 'Inter', Arial, sans-serif; font-size: 12px; font-weight: 600; }
+      .text-innovation { fill: #ef4444; font-family: 'Inter', Arial, sans-serif; font-size: 13px; font-weight: 700; }
+
+      /* Estilos de nodo por nivel */
+      .node-level1 { stroke: #22c55e; stroke-width: 2; fill: rgba(34, 197, 94, 0.1); rx: 8; ry: 8; }
+      .node-level2 { stroke: #3b82f6; stroke-width: 2; fill: rgba(59, 130, 246, 0.1); rx: 10; ry: 10; }
+      .node-level3 { stroke: #ef4444; stroke-width: 2; fill: rgba(239, 68, 68, 0.1); rx: 12; ry: 12; }
+
+      /* Flujos animados */
+      .flow-level1 { stroke: #22c55e; stroke-width: 3; fill: none; stroke-dasharray: 10 5; animation: flow-forward 3s linear infinite; }
+      .flow-level2 { stroke: #3b82f6; stroke-width: 3; fill: none; stroke-dasharray: 8 4; animation: flow-forward 2.5s linear infinite; }
+      .flow-level3 { stroke: #ef4444; stroke-width: 3; fill: none; stroke-dasharray: 12 6; animation: flow-forward 2s linear infinite; }
+      
+      .evolution-flow { stroke: #f59e0b; stroke-width: 4; fill: none; stroke-dasharray: 15 10; animation: flow-forward 4s linear infinite; opacity: 0.8; }
+
+      /* Efectos interactivos */
+      .node { cursor: pointer; transition: all 0.3s ease; }
+      .node:hover { filter: url(#glow-strong); transform: scale(1.05); }
+
+      /* Animaciones */
+      @keyframes flow-forward {
+        0% { stroke-dashoffset: 0; }
+        100% { stroke-dashoffset: -30; }
+      }
+
+      @keyframes pulse-species {
+        0%, 100% { opacity: 0.6; transform: scale(1); }
+        50% { opacity: 1; transform: scale(1.1); }
+      }
+
+      @keyframes rotate-parliament {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+      }
+
+      /* Elementos específicos */
+      .species-node { animation: pulse-species 4s ease-in-out infinite; }
+      .parliament-circle { animation: rotate-parliament 30s linear infinite; }
+      .acoustic-wave { animation: flow-forward 1.5s linear infinite; }
+
+      /* Indicadores de estado IUCN */
+      .iucn-cr { fill: #dc2626; stroke: #dc2626; }
+      .iucn-en { fill: #ea580c; stroke: #ea580c; }
+      .iucn-vu { fill: #d97706; stroke: #d97706; }
+      .iucn-lc { fill: #16a34a; stroke: #16a34a; }
+    ]]></style>
+  </defs>
+
+  <!-- Fondo -->
+  <rect width="1600" height="1000" fill="url(#bg-evolution)"/>
+
+  <!-- Título principal -->
+  <text x="80" y="50" class="title-main">Framework Bio-Token V2.0: De Grabaciones Individuales a Democracia Multi-Especies</text>
+  <text x="80" y="75" class="text-detail">Implementación de Teoría Actor-Red en Blockchain para Conservación de Biodiversidad Colombiana</text>
+
+  <!-- ========== NIVEL 1: BIO-TOKENS INDIVIDUALES ========== -->
+  <g id="level1-section">
+    <!-- Fondo de sección -->
+    <rect x="40" y="120" width="480" height="280" rx="15" fill="url(#level1-bg)" stroke="#22c55e" stroke-width="2"/>
+    
+    <!-- Título de sección -->
+    <text x="60" y="145" class="title-section">Nivel 1: Bio-Tokenización Individual</text>
+    <text x="60" y="165" class="text-detail">Grabaciones acústicas → Tokens blockchain (Algorand ASA)</text>
+
+    <!-- Nodo: Grabación -->
+    <g class="node" data-node="recording" transform="translate(60,180)">
+      <rect class="node-level1" width="120" height="80"/>
+      <text class="title-node" x="60" y="25" text-anchor="middle">Grabación</text>
+      <text class="text-detail" x="10" y="40">• Ara macao</text>
+      <text class="text-detail" x="10" y="52">• 180 seg</text>
+      <text class="text-detail" x="10" y="64">• Chocó Bio.</text>
+      
+      <!-- Onda sonora animada -->
+      <rect x="5" y="5" width="110" height="15" fill="url(#soundwave)" class="acoustic-wave"/>
+    </g>
+
+    <!-- Nodo: Análisis -->
+    <g class="node" data-node="analysis" transform="translate(220,180)">
+      <rect class="node-level1" width="120" height="80"/>
+      <text class="title-node" x="60" y="25" text-anchor="middle">Análisis</text>
+      <text class="text-detail" x="10" y="40">• Estado IUCN: VU</text>
+      <text class="text-detail" x="10" y="52">• Calidad: 0.92</text>
+      <text class="text-detail" x="10" y="64">• Rareza geográfica</text>
+    </g>
+
+    <!-- Nodo: Token -->
+    <g class="node" data-node="token" transform="translate(380,180)">
+      <rect class="node-level1" width="120" height="80"/>
+      <text class="title-node" x="60" y="25" text-anchor="middle">Bio-Token</text>
+      <text class="text-emphasis" x="60" y="45" text-anchor="middle">24 BIOTK</text>
+      <text class="text-detail" x="10" y="58">• ASA Algorand</text>
+      <text class="text-detail" x="10" y="70">• Metadata científica</text>
+      
+      <!-- Indicador de valor -->
+      <circle cx="95" cy="15" r="8" class="iucn-vu"/>
+      <text x="95" y="19" text-anchor="middle" fill="white" font-size="10">VU</text>
+    </g>
+
+    <!-- Flujos Nivel 1 -->
+    <path class="flow-level1" d="M180 220 L220 220" marker-end="url(#arrow-level1)"/>
+    <path class="flow-level1" d="M340 220 L380 220" marker-end="url(#arrow-level1)"/>
+
+    <!-- Fórmula de tokenización -->
+    <text x="60" y="295" class="text-detail">Fórmula: Duración × Metadata × Rareza × Estado_IUCN × Calidad</text>
+    <text x="60" y="310" class="text-emphasis">24 = (180/30) × 1.2 × 1.5 × 1.5 × 0.92</text>
+  </g>
+
+  <!-- ========== FLECHA DE EVOLUCIÓN 1→2 ========== -->
+  <path class="evolution-flow" d="M540 260 L580 260" marker-end="url(#evolution-arrow)"/>
+  <text x="560" y="245" class="text-emphasis" text-anchor="middle">EVOLUCIÓN</text>
+  <text x="560" y="285" class="text-detail" text-anchor="middle">Relaciones</text>
+
+  <!-- ========== NIVEL 2: TOKENS DE RED VIVIENTE ========== -->
+  <g id="level2-section">
+    <!-- Fondo de sección -->
+    <rect x="600" y="120" width="480" height="280" rx="15" fill="url(#level2-bg)" stroke="#3b82f6" stroke-width="2"/>
+    
+    <!-- Título de sección -->
+    <text x="620" y="145" class="title-section">Nivel 2: Tokens de Red Viviente</text>
+    <text x="620" y="165" class="text-detail">Relaciones ecológicas → Propiedades emergentes de red</text>
+
+    <!-- Red de especies -->
+    <g transform="translate(620,180)">
+      <!-- Especies interconectadas -->
+      <g class="species-node">
+        <circle cx="80" cy="40" r="15" class="iucn-vu" stroke="#3b82f6" stroke-width="2"/>
+        <text x="80" y="45" text-anchor="middle" fill="white" font-size="9">Ara</text>
+      </g>
+      
+      <g class="species-node" style="animation-delay: 1s">
+        <circle cx="140" cy="80" r="12" class="iucn-cr" stroke="#3b82f6" stroke-width="2"/>
+        <text x="140" y="85" text-anchor="middle" fill="white" font-size="8">Atla.</text>
+      </g>
+      
+      <g class="species-node" style="animation-delay: 2s">
+        <circle cx="40" cy="100" r="18" class="iucn-lc" stroke="#3b82f6" stroke-width="2"/>
+        <text x="40" y="106" text-anchor="middle" fill="white" font-size="9">Cecropia</text>
+      </g>
+
+      <g class="species-node" style="animation-delay: 0.5s">
+        <circle cx="120" cy="20" r="14" class="iucn-lc" stroke="#3b82f6" stroke-width="2"/>
+        <text x="120" y="25" text-anchor="middle" fill="white" font-size="8">Alouatta</text>
+      </g>
+
+      <!-- Conexiones de red -->
+      <path class="flow-level2" d="M95 40 L125 25" stroke-opacity="0.6"/>
+      <path class="flow-level2" d="M80 55 L55 85" stroke-opacity="0.6"/>
+      <path class="flow-level2" d="M140 68 L135 35" stroke-opacity="0.6"/>
+      <path class="flow-level2" d="M55 100 L125 75" stroke-opacity="0.6"/>
+
+      <!-- Indicadores temporales -->
+      <g transform="translate(200,40)">
+        <circle cx="0" cy="0" r="30" fill="none" stroke="#3b82f6" stroke-width="1" opacity="0.3"/>
+        <text x="0" y="-35" text-anchor="middle" class="text-detail">Ciclos Temporales</text>
+        
+        <!-- Marcadores de tiempo -->
+        <circle cx="0" cy="-25" r="3" fill="#fbbf24"/> <!-- Amanecer -->
+        <circle cx="25" cy="0" r="3" fill="#f59e0b"/>   <!-- Día -->
+        <circle cx="0" cy="25" r="3" fill="#7c3aed"/>   <!-- Atardecer -->
+        <circle cx="-25" cy="0" r="3" fill="#1e293b"/>  <!-- Noche -->
+      </g>
+    </g>
+
+    <!-- Token de Red -->
+    <g class="node" data-node="network-token" transform="translate(860,200)">
+      <rect class="node-level2" width="140" height="100"/>
+      <text class="title-node" x="70" y="25" text-anchor="middle">Token de Red</text>
+      <text class="text-emphasis" x="70" y="45" text-anchor="middle">156 LNTK</text>
+      <text class="text-detail" x="10" y="60">• 4 especies conectadas</text>
+      <text class="text-detail" x="10" y="72">• Salud ecosistema: 0.82</text>
+      <text class="text-detail" x="10" y="84">• Red amanecer coral</text>
+    </g>
+
+    <!-- Métricas del ecosistema -->
+    <text x="620" y="320" class="text-detail">Métricas: Biodiversidad: 0.75 | Conectividad: 0.68 | Estabilidad: 0.82</text>
+    <text x="620" y="335" class="text-emphasis">Propiedades emergentes: Coro coordinado del amanecer</text>
+    <text x="620" y="350" class="text-detail">Servicios ecosistémicos: Dispersión de semillas, polinización, control de plagas</text>
+  </g>
+
+  <!-- ========== FLECHA DE EVOLUCIÓN 2→3 ========== -->
+  <path class="evolution-flow" d="M1100 260 L1140 260" marker-end="url(#evolution-arrow)"/>
+  <text x="1120" y="245" class="text-emphasis" text-anchor="middle">INNOVACIÓN</text>
+  <text x="1120" y="285" class="text-detail" text-anchor="middle">Gobernanza</text>
+
+  <!-- ========== NIVEL 3: PARLAMENTO ECOLÓGICO ========== -->
+  <g id="level3-section">
+    <!-- Fondo de sección -->
+    <rect x="1160" y="120" width="400" height="280" rx="15" fill="url(#level3-bg)" stroke="#ef4444" stroke-width="2"/>
+    
+    <!-- Título de sección -->
+    <text x="1180" y="145" class="title-section">Nivel 3: Parlamento Ecológico</text>
+    <text x="1180" y="165" class="text-innovation">¡Democracia Multi-Especies!</text>
+
+    <!-- Cámara parlamentaria circular -->
+    <g transform="translate(1360,260)">
+      <circle cx="0" cy="0" r="80" fill="none" stroke="#ef4444" stroke-width="2" opacity="0.3"/>
+      
+      <!-- Asientos parlamentarios por especie -->
+      <g class="parliament-circle" transform-origin="0 0">
+        <!-- Ara macao - 15 poder de voto -->
+        <g transform="translate(0,-70)">
+          <rect x="-8" y="-4" width="16" height="8" rx="2" class="iucn-vu"/>
+          <text x="0" y="15" text-anchor="middle" class="text-detail" font-size="8">Ara macao</text>
+          <text x="0" y="25" text-anchor="middle" class="text-emphasis" font-size="9">15 votos</text>
+        </g>
+        
+        <!-- Atlapetes flaviceps - 25 poder de voto (CR) -->
+        <g transform="rotate(72) translate(0,-70)">
+          <rect x="-10" y="-5" width="20" height="10" rx="2" class="iucn-cr"/>
+          <text x="0" y="18" text-anchor="middle" class="text-detail" font-size="8">A. flaviceps</text>
+          <text x="0" y="28" text-anchor="middle" class="text-emphasis" font-size="9">25 votos</text>
+        </g>
+        
+        <!-- Cecropia - 20 poder de voto (productor) -->
+        <g transform="rotate(144) translate(0,-70)">
+          <rect x="-9" y="-4" width="18" height="8" rx="2" class="iucn-lc"/>
+          <text x="0" y="15" text-anchor="middle" class="text-detail" font-size="8">Cecropia</text>
+          <text x="0" y="25" text-anchor="middle" class="text-emphasis" font-size="9">20 votos</text>
+        </g>
+        
+        <!-- Alouatta - 12 poder de voto -->
+        <g transform="rotate(216) translate(0,-70)">
+          <rect x="-7" y="-4" width="14" height="8" rx="2" class="iucn-lc"/>
+          <text x="0" y="15" text-anchor="middle" class="text-detail" font-size="8">Alouatta</text>
+          <text x="0" y="25" text-anchor="middle" class="text-emphasis" font-size="9">12 votos</text>
+        </g>
+        
+        <!-- Tinamus - 8 poder de voto -->
+        <g transform="rotate(288) translate(0,-70)">
+          <rect x="-6" y="-3" width="12" height="6" rx="2" class="iucn-lc"/>
+          <text x="0" y="15" text-anchor="middle" class="text-detail" font-size="8">Tinamus</text>
+          <text x="0" y="25" text-anchor="middle" class="text-emphasis" font-size="9">8 votos</text>
+        </g>
+      </g>
+      
+      <!-- Centro de consenso -->
+      <circle cx="0" cy="0" r="15" fill="#ef4444" opacity="0.3"/>
+      <text x="0" y="5" text-anchor="middle" class="text-emphasis" font-size="11">CONSENSO</text>
+    </g>
+
+    <!-- Panel de propuestas -->
+    <g transform="translate(1180,300)">
+      <rect x="0" y="0" width="160" height="80" rx="8" stroke="#ef4444" stroke-width="2" fill="rgba(239, 68, 68, 0.1)"/>
+      <text x="80" y="20" text-anchor="middle" class="title-node">Propuesta Activa</text>
+      <text x="10" y="35" class="text-detail">Corredor Acústico</text>
+      <text x="10" y="47" class="text-detail">Coro del Amanecer</text>
+      <text x="10" y="59" class="text-emphasis">75% A FAVOR</text>
+      <text x="10" y="71" class="text-detail">Urgencia: ALTA</text>
+    </g>
+  </g>
+
+  <!-- ========== SECCIÓN INFERIOR: TEORÍA ACTOR-RED ========== -->
+  <g id="actor-network-section" transform="translate(0,450)">
+    <!-- Fondo conceptual -->
+    <rect x="40" y="40" width="1520" height="200" rx="15" fill="rgba(15, 23, 42, 0.4)" stroke="#64748b" stroke-width="1"/>
+    
+    <text x="60" y="70" class="title-section">Implementación de Teoría Actor-Red (Bruno Latour)</text>
+    <text x="60" y="95" class="text-detail">Simetría entre actores humanos y no-humanos en redes socio-técnicas</text>
+
+    <!-- Actores Humanos -->
+    <g transform="translate(80,120)">
+      <rect x="0" y="0" width="200" height="100" rx="8" stroke="#64748b" stroke-width="2" fill="rgba(100, 116, 139, 0.1)"/>
+      <text x="100" y="25" text-anchor="middle" class="title-node">Actores Humanos</text>
+      <text x="15" y="45" class="text-detail">• Comunidades locales</text>
+      <text x="15" y="57" class="text-detail">• Investigadores</text>
+      <text x="15" y="69" class="text-detail">• Validadores DAO</text>
+      <text x="15" y="81" class="text-detail">• Desarrolladores blockchain</text>
+    </g>
+
+    <!-- Proceso de Traducción -->
+    <g transform="translate(320,120)">
+      <rect x="0" y="0" width="160" height="100" rx="8" stroke="#f59e0b" stroke-width="2" fill="rgba(245, 158, 11, 0.1)"/>
+      <text x="80" y="25" text-anchor="middle" class="title-node">Traducción</text>
+      <text x="15" y="45" class="text-detail">• Firma acústica → Voto</text>
+      <text x="15" y="57" class="text-detail">• Presencia → Participación</text>
+      <text x="15" y="69" class="text-detail">• Patrón temporal → Poder</text>
+      <text x="15" y="81" class="text-emphasis">Blockchain = Mediador</text>
+    </g>
+
+    <!-- Actores No-Humanos -->
+    <g transform="translate(520,120)">
+      <rect x="0" y="0" width="200" height="100" rx="8" stroke="#22c55e" stroke-width="2" fill="rgba(34, 197, 94, 0.1)"/>
+      <text x="100" y="25" text-anchor="middle" class="title-node">Actores No-Humanos</text>
+      <text x="15" y="45" class="text-detail">• Especies (vía acústica)</text>
+      <text x="15" y="57" class="text-detail">• Ecosistemas</text>
+      <text x="15" y="69" class="text-detail">• Patrones temporales</text>
+      <text x="15" y="81" class="text-detail">• Redes ecológicas</text>
+    </g>
+
+    <!-- Red Socio-Técnica -->
+    <g transform="translate(760,120)">
+      <rect x="0" y="0" width="180" height="100" rx="8" stroke="#3b82f6" stroke-width="2" fill="rgba(59, 130, 246, 0.1)"/>
+      <text x="90" y="25" text-anchor="middle" class="title-node">Red Socio-Técnica</text>
+      <text x="15" y="45" class="text-detail">• Algorand blockchain</text>
+      <text x="15" y="57" class="text-detail">• Algoritmos IA</text>
+      <text x="15" y="69" class="text-detail">• Sensores PAM</text>
+      <text x="15" y="81" class="text-detail">• Interfaces usuario</text>
+    </g>
+
+    <!-- Ensamblajes -->
+    <g transform="translate(980,120)">
+      <rect x="0" y="0" width="200" height="100" rx="8" stroke="#a855f7" stroke-width="2" fill="rgba(168, 85, 247, 0.1)"/>
+      <text x="100" y="25" text-anchor="middle" class="title-node">Ensamblajes</text>
+      <text x="15" y="45" class="text-detail">• Parlamento Ecológico</text>
+      <text x="15" y="57" class="text-detail">• Gobernanza Temporal</text>
+      <text x="15" y="69" class="text-detail">• Conservación Activa</text>
+      <text x="15" y="81" class="text-emphasis">Propiedades Emergentes</text>
+    </g>
+
+    <!-- Resultados -->
+    <g transform="translate(1220,120)">
+      <rect x="0" y="0" width="200" height="100" rx="8" stroke="#ef4444" stroke-width="2" fill="rgba(239, 68, 68, 0.1)"/>
+      <text x="100" y="25" text-anchor="middle" class="title-node">Impacto Real</text>
+      <text x="15" y="45" class="text-detail">• Protección habitat</text>
+      <text x="15" y="57" class="text-detail">• Fondos conservación</text>
+      <text x="15" y="69" class="text-detail">• Participación comunitaria</text>
+      <text x="15" y="81" class="text-innovation">Biodiversidad ↑</text>
+    </g>
+
+    <!-- Conexiones ANT -->
+    <path class="flow-level2" d="M280 170 L320 170" marker-end="url(#arrow-level2)"/>
+    <path class="flow-level2" d="M480 170 L520 170" marker-end="url(#arrow-level2)"/>
+    <path class="flow-level1" d="M720 170 L760 170" marker-end="url(#arrow-level1)"/>
+    <path class="flow-level3" d="M940 170 L980 170" marker-end="url(#arrow-level3)"/>
+    <path class="evolution-flow" d="M1180 170 L1220 170" marker-end="url(#evolution-arrow)"/>
+  </g>
+
+  <!-- ========== PIE DE PÁGINA ========== -->
+  <g transform="translate(0,750)">
+    <!-- Marco de información -->
+    <rect x="40" y="20" width="1520" height="180" rx="10" fill="rgba(15, 23, 42, 0.6)" stroke="#475569" stroke-width="1"/>
+    
+    <text x="60" y="50" class="title-section">Contribuciones de Investigación</text>
+    
+    <!-- Columna 1: Teórica -->
+    <g transform="translate(80,70)">
+      <text x="0" y="0" class="text-emphasis">TEÓRICA</text>
+      <text x="0" y="20" class="text-detail">• Primera implementación práctica de</text>
+      <text x="0" y="32" class="text-detail">  democracia multi-especies</text>
+      <text x="0" y="44" class="text-detail">• Operacionalización de Teoría Actor-Red</text>
+      <text x="0" y="56" class="text-detail">• Simetría humano/no-humano en blockchain</text>
+      <text x="0" y="68" class="text-detail">• Gobernanza temporal basada en ciclos naturales</text>
+    </g>
+
+    <!-- Columna 2: Técnica -->
+    <g transform="translate(400,70)">
+      <text x="0" y="0" class="text-emphasis">TÉCNICA</text>
+      <text x="0" y="20" class="text-detail">• Integración real Algorand SDK</text>
+      <text x="0" y="32" class="text-detail">• Algoritmos tokenización científica</text>
+      <text x="0" y="44" class="text-detail">• Métricas salud ecosistema en tiempo real</text>
+      <text x="0" y="56" class="text-detail">• Sistema votación ponderado por conservación</text>
+      <text x="0" y="68" class="text-detail">• Arquitectura escalable multi-blockchain</text>
+    </g>
+
+    <!-- Columna 3: Práctica -->
+    <g transform="translate(720,70)">
+      <text x="0" y="0" class="text-emphasis">PRÁCTICA</text>
+      <text x="0" y="20" class="text-detail">• Enfoque biodiversidad colombiana</text>
+      <text x="0" y="32" class="text-detail">• Integración datos IUCN reales</text>
+      <text x="0" y="44" class="text-detail">• Marco legal Ley 99 de 1993</text>
+      <text x="0" y="56" class="text-detail">• Participación comunitaria incentivizada</text>
+      <text x="0" y="68" class="text-detail">• Impacto conservación medible</text>
+    </g>
+
+    <!-- Columna 4: Innovación -->
+    <g transform="translate(1040,70)">
+      <text x="0" y="0" class="text-innovation">INNOVACIÓN MUNDIAL</text>
+      <text x="0" y="20" class="text-detail">• Primer parlamento ecológico funcional</text>
+      <text x="0" y="32" class="text-detail">• Democracia basada en presencia acústica</text>
+      <text x="0" y="44" class="text-detail">• Tokens de relaciones ecológicas</text>
+      <text x="0" y="56" class="text-detail">• Consenso inter-especies para conservación</text>
+      <text x="0" y="68" class="text-innovation">• Posthuman Environmental Governance</text>
+    </g>
+
+    <!-- Estadísticas -->
+    <g transform="translate(80,160)">
+      <text x="0" y="0" class="text-detail">Estadísticas del Framework: 5 especies colombianas | 80 votos parlamentarios totales | 15+ propuestas de conservación simuladas</text>
+      <text x="400" y="0" class="text-detail">Tecnologías: Algorand TestNet | TypeScript | Actor-Network Theory | Colombian Biodiversity Data</text>
+      <text x="900" y="0" class="text-emphasis">¡Primera demostración mundial de democracia blockchain multi-especies!</text>
+    </g>
+  </g>
+
+  <!-- JavaScript para interactividad -->
+  <script><![CDATA[
+    (function() {
+      // Manejo de clics en nodos
+      const nodes = document.querySelectorAll('.node');
+      nodes.forEach(node => {
+        node.addEventListener('click', function() {
+          const nodeType = this.getAttribute('data-node');
+          console.log(`Nodo activado: ${nodeType}`);
+          
+          // Efecto visual de activación
+          this.style.filter = 'url(#glow-strong)';
+          setTimeout(() => {
+            this.style.filter = '';
+          }, 1500);
+        });
+
+        node.addEventListener('mouseenter', function() {
+          this.style.transform = 'scale(1.05)';
+        });
+
+        node.addEventListener('mouseleave', function() {
+          this.style.transform = 'scale(1)';
+        });
+      });
+
+      // Pausar/reanudar animaciones al hacer clic
+      let animationsPaused = false;
+      document.addEventListener('keydown', function(e) {
+        if (e.code === 'Space') {
+          e.preventDefault();
+          const allAnimated = document.querySelectorAll('[class*="flow-"], .species-node, .parliament-circle, .acoustic-wave');
+          
+          if (animationsPaused) {
+            allAnimated.forEach(el => el.style.animationPlayState = 'running');
+            animationsPaused = false;
+          } else {
+            allAnimated.forEach(el => el.style.animationPlayState = 'paused');
+            animationsPaused = true;
+          }
+        }
+      });
+
+      console.log('Framework Bio-Token V2.0 cargado. Presiona ESPACIO para pausar/reanudar animaciones.');
+    })();
+  ]]></script>
+</svg>
