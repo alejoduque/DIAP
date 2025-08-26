@@ -1,1 +1,7 @@
 .DS_Store
+
+# Large media files
+*.gif
+*.mov
+*.mp4
+*.avi
