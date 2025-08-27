@@ -1,39 +1,24 @@
-// Parliament of All Things - SuperCollider Synthesizer
-// Loader and Initialization System
-// Based on sonETH architecture
-// Current Date: 2025-08-26
+// Parliament of All Things - Main Loader
+// Component Loading System
+// Current Date: 2025-08-27
 
 (
 {
     var success = true;
     
     try {
-        // Initialize global parliament namespace
-        ~parliament = ~parliament ?? ();
+        "Parliament Loader initializing...".postln;
         
-        // Parliament configuration
+        // Initialize parliament namespace
+        ~parliament = ();
         ~parliament.config = (
             version: "1.0.0",
             name: "Parliament of All Things",
             agents: 21,
-            sampleRate: 48000,
-            blockSize: 512,
-            
-            // Agent counts by type
             acousticSpecies: 5,
-            ednaSites: 8, 
+            ednaSites: 8,
             fungiNetworks: 4,
-            aiCore: 1,
-            
-            // Temporal cycles (in seconds)
-            parliamentRotation: 120,
-            aiConsciousness: 3,
-            fungiChemical: 6,
-            ednaValidation: 8,
-            
-            // Audio routing
-            mainOut: 0,
-            auxSends: 4
+            aiCore: 1
         );
         
         // Component loading order
@@ -42,10 +27,15 @@
             "2_agent_synthdefs.scd", 
             "3_temporal_engine.scd",
             "4_parliament_gui.scd",
-            "5_agent_controllers.scd",
-            "6_consensus_engine.scd",
+            "5_parliament_control.scd",
+            "6_effect_synthdefs.scd",
             "7_osc_handlers.scd"
         ];
+        
+        // Error handling
+        ~handleParliamentError = { |error, component|
+            ("Parliament Error in " ++ component ++ ": " ++ error.errorString).warn;
+        };
         
         // Status tracking
         ~parliament.status = (
@@ -57,7 +47,7 @@
             osc: false
         );
         
-        // Load components sequentially
+        // Load components function
         ~loadParliamentComponents = {
             "Loading Parliament of All Things...".postln;
             
@@ -66,88 +56,18 @@
                 if(File.exists(path)) {
                     ("Loading: " ++ filename).postln;
                     path.load;
-                    0.1.wait; // Small delay between loads
                 } {
                     ("Warning: " ++ filename ++ " not found").warn;
                 };
             };
             
-            // Final status report
+            // Final status
             Task({
                 1.wait;
-                ~reportParliamentStatus.value;
+                if(~reportParliamentStatus.notNil) {
+                    ~reportParliamentStatus.value;
+                };
             }).start;
-        };
-        
-        // Status reporting function  
-        ~reportParliamentStatus = {
-            "".postln;
-            "=== Parliament of All Things - Status Report ===".postln;
-            ("Version: " ++ ~parliament.config.version).postln;
-            ("Total Agents: " ++ ~parliament.config.agents).postln;
-            "".postln;
-            
-            "Component Status:".postln;
-            ~parliament.status.keysValuesDo { |key, status|
-                ("  " ++ key.asString.toUpper ++ ": " ++ 
-                 if(status) { "✓ LOADED" } { "✗ NOT LOADED" }).postln;
-            };
-            "".postln;
-            
-            if(~parliament.status.values.every(_ == true)) {
-                "🏛️ Parliament ready for democratic synthesis!".postln;
-            } {
-                "⚠️ Some components failed to load - check errors above".postln;
-            };
-            "".postln;
-        };
-        
-        // Cleanup function
-        ~cleanupParliament = {
-            "Cleaning up Parliament resources...".postln;
-            
-            // Stop routines
-            if(~parliament.temporalRoutine.notNil) { 
-                ~parliament.temporalRoutine.stop;
-                ~parliament.temporalRoutine = nil;
-            };
-            if(~parliament.guiRoutine.notNil) { 
-                ~parliament.guiRoutine.stop;
-                ~parliament.guiRoutine = nil;
-            };
-            
-            // Close GUI
-            if(~parliament.mainWindow.notNil) {
-                ~parliament.mainWindow.close;
-                ~parliament.mainWindow = nil;
-            };
-            
-            // Free synths
-            if(~parliament.agents.notNil) {
-                ~parliament.agents.do { |agent|
-                    if(agent.synth.notNil) {
-                        agent.synth.free;
-                    };
-                };
-                ~parliament.agents = nil;
-            };
-            
-            // Free buses
-            if(~parliament.buses.notNil) {
-                ~parliament.buses.do { |bus|
-                    if(bus.notNil) { bus.free };
-                };
-                ~parliament.buses = nil;
-            };
-            
-            ~parliament = nil;
-            "Parliament cleanup complete.".postln;
-        };
-        
-        // Error handler for parliament operations
-        ~handleParliamentError = { |error, context|
-            ("Parliament Error in " ++ context ++ ": " ++ error.errorString).error;
-            ~parliament.status[context.asSymbol] = false;
         };
         
         "Parliament Loader initialized successfully.".postln;
@@ -155,7 +75,7 @@
         
     } {
         |error|
-        "Parliament Loader initialization failed: %".format(error.errorString).error;
+        ("Parliament loader error: " ++ error.errorString).warn;
         success = false;
     };
     

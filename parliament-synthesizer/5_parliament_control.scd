@@ -1,7 +1,6 @@
 // Parliament of All Things - Main Control System
 // Agent Management and Democratic Coordination
-// Based on sonETH control patterns
-// Current Date: 2025-08-26
+// Current Date: 2025-08-27
 
 (
 {
@@ -15,20 +14,20 @@
             "🏛️ Starting Parliament of All Things...".postln;
             
             if(Server.default.serverRunning.not) {
-                "Server not running - please load server configuration first".warn;
+                "Server not running - please start server first".warn;
                 ^false;
             };
             
             // Start temporal engine first
-            ~startTemporalEngine.value;
+            if(~startTemporalEngine.notNil) {
+                ~startTemporalEngine.value;
+            };
             
             // Start all acoustic species agents
             ~parliament.agents.acousticSpecies.do({ |agent, i|
-                var freq = [220, 330, 440, 165, 275][i]; // Species-specific base frequencies
-                
                 agent.synth = Synth(\acousticSpecies, [
-                    \freq, freq,
-                    \amp, 0.3,
+                    \freq, agent.freq,
+                    \amp, 0.15,
                     \species, i,
                     \presence, agent.presence,
                     \activity, 0.5,
@@ -44,11 +43,11 @@
             
             // Start all eDNA site agents
             ~parliament.agents.ednaSites.do({ |agent, i|
-                var freq = 110 + (i * 20); // Regional frequency variations
+                var freq = 55 + (i * 7); // Regional frequency variations
                 
                 agent.synth = Synth(\ednaSite, [
                     \freq, freq,
-                    \amp, 0.2,
+                    \amp, 0.1,
                     \siteId, i,
                     \biodiversity, agent.biodiversity,
                     \validation, agent.validation,
@@ -67,7 +66,7 @@
                 
                 agent.synth = Synth(\fungiNetwork, [
                     \freq, freq,
-                    \amp, 0.3,
+                    \amp, 0.2,
                     \nodeId, i,
                     \chemical, agent.chemical,
                     \connectivity, agent.connectivity,
@@ -85,7 +84,7 @@
             // Start AI Core agent
             ~parliament.agents.aiCore[0].synth = Synth(\aiCore, [
                 \freq, 200,
-                \amp, 0.4,
+                \amp, 0.3,
                 \consciousness, ~parliament.agents.aiCore[0].consciousness,
                 \optimization, ~parliament.agents.aiCore[0].optimization,
                 \metaGov, ~parliament.agents.aiCore[0].metaGov,
@@ -111,7 +110,9 @@
             "  ✓ Consensus Engine active".postln;
             
             // Start effect processors
-            ~startEffectProcessors.value;
+            if(~startEffectProcessors.notNil) {
+                ~startEffectProcessors.value;
+            };
             
             // Update GUI if available
             if(~parliament.mainWindow.notNil) {
@@ -127,7 +128,9 @@
             "🏛️ Stopping Parliament of All Things...".postln;
             
             // Stop temporal engine
-            ~stopTemporalEngine.value;
+            if(~stopTemporalEngine.notNil) {
+                ~stopTemporalEngine.value;
+            };
             
             // Free all agent synths
             ~parliament.agents.acousticSpecies.do({ |agent|
@@ -163,7 +166,9 @@
             };
             
             // Stop effect processors
-            ~stopEffectProcessors.value;
+            if(~stopEffectProcessors.notNil) {
+                ~stopEffectProcessors.value;
+            };
             
             // Update GUI if available
             if(~parliament.mainWindow.notNil) {
@@ -175,146 +180,13 @@
             true;
         };
         
-        // Effect processors
-        ~startEffectProcessors = {
-            // Reverb processor
-            ~parliament.reverbProcessor = Synth(\freeverb2, [
-                \in, ~parliament.audioBuses.reverb.index,
-                \out, ~parliament.audioBuses.main.index,
-                \mix, 0.3,
-                \room, 0.7,
-                \damp, 0.5
-            ], addAction: \addToTail);
-            
-            // Delay processor
-            ~parliament.delayProcessor = Synth(\delay1, [
-                \in, ~parliament.audioBuses.delay.index,
-                \out, ~parliament.audioBuses.main.index,
-                \maxdelaytime, 2.0,
-                \delaytime, 0.3,
-                \decaytime, 2.0,
-                \mul, 0.2
-            ], addAction: \addToTail);
-            
-            // Main mixer
-            ~parliament.mainMixer = Synth(\mixer, [
-                \in1, ~parliament.audioBuses.acousticSpecies.index,
-                \in2, ~parliament.audioBuses.ednaSites.index,
-                \in3, ~parliament.audioBuses.fungiNetworks.index,
-                \in4, ~parliament.audioBuses.aiCore.index,
-                \out, ~parliament.audioBuses.main.index,
-                \amp1, 0.8, \amp2, 0.6, \amp3, 0.7, \amp4, 0.5
-            ], addAction: \addToTail);
-            
-            // Master output
-            ~parliament.masterOutput = Synth(\masterOut, [
-                \in, ~parliament.audioBuses.main.index,
-                \out, 0,
-                \amp, 0.7
-            ], addAction: \addToTail);
-        };
-        
-        ~stopEffectProcessors = {
-            [~parliament.reverbProcessor, ~parliament.delayProcessor, 
-             ~parliament.mainMixer, ~parliament.masterOutput].do({ |synth|
-                if(synth.notNil) {
-                    synth.free;
-                };
-            });
-            
-            ~parliament.reverbProcessor = nil;
-            ~parliament.delayProcessor = nil;
-            ~parliament.mainMixer = nil;
-            ~parliament.masterOutput = nil;
-        };
-        
-        // Parameter update functions (called from GUI and OSC)
-        ~updateAgentParameter = { |agentType, param, value|
-            switch(agentType,
-                "Acoustic Species", {
-                    ~parliament.agents.acousticSpecies.do({ |agent|
-                        if(agent.synth.notNil) {
-                            agent.synth.set(param, value);
-                        };
-                    });
-                },
-                "eDNA Sites", {
-                    ~parliament.agents.ednaSites.do({ |agent|
-                        if(agent.synth.notNil) {
-                            agent.synth.set(param, value);
-                        };
-                    });
-                },
-                "Fungi Networks", {
-                    ~parliament.agents.fungiNetworks.do({ |agent|
-                        if(agent.synth.notNil) {
-                            agent.synth.set(param, value);
-                        };
-                    });
-                },
-                "AI Core", {
-                    if(~parliament.agents.aiCore[0].synth.notNil) {
-                        ~parliament.agents.aiCore[0].synth.set(param, value);
-                    };
-                }
-            );
-        };
-        
-        // Agent state queries
-        ~getAgentStates = {
-            (
-                acousticSpecies: ~parliament.agents.acousticSpecies.collect({ |agent|
-                    (
-                        name: agent.name,
-                        active: agent.synth.notNil,
-                        presence: agent.presence,
-                        votes: agent.votes,
-                        status: agent.status
-                    )
-                }),
-                
-                ednaSites: ~parliament.agents.ednaSites.collect({ |agent|
-                    (
-                        name: agent.name,
-                        active: agent.synth.notNil,
-                        biodiversity: agent.biodiversity,
-                        validation: agent.validation
-                    )
-                }),
-                
-                fungiNetworks: ~parliament.agents.fungiNetworks.collect({ |agent|
-                    (
-                        name: agent.name,
-                        active: agent.synth.notNil,
-                        chemical: agent.chemical,
-                        connectivity: agent.connectivity,
-                        coverage: agent.coverage
-                    )
-                }),
-                
-                aiCore: (
-                    name: ~parliament.agents.aiCore[0].name,
-                    active: ~parliament.agents.aiCore[0].synth.notNil,
-                    consciousness: ~parliament.agents.aiCore[0].consciousness,
-                    optimization: ~parliament.agents.aiCore[0].optimization,
-                    metaGov: ~parliament.agents.aiCore[0].metaGov
-                ),
-                
-                consensus: (
-                    active: ~parliament.consensusEngine.notNil,
-                    level: ~parliament.controlBuses.consensusLevel.getSynchronous,
-                    totalVotes: ~parliament.controlBuses.totalVotes.getSynchronous,
-                    rotationSpeed: ~parliament.controlBuses.rotationSpeed.getSynchronous
-                )
-            )
-        };
-        
         // Democratic voting simulation
         ~simulateVote = { |proposalType="environmental"|
-            "🗳️ Simulating democratic vote on " ++ proposalType ++ " proposal...".postln;
-            
             var totalVotes = 0;
             var yesVotes = 0;
+            var consensus, result;
+            
+            "🗳️ Simulating democratic vote on " ++ proposalType ++ " proposal...".postln;
             
             // Each acoustic species votes based on IUCN status weighting
             ~parliament.agents.acousticSpecies.do({ |agent|
@@ -326,7 +198,7 @@
                         "LC", 0.5  // Least concern species neutral
                     );
                     
-                    if(voteChance > 0.5.rand) {
+                    if(voteChance > 1.0.rand) {
                         yesVotes = yesVotes + voteWeight;
                         ("  ✓ " ++ agent.name ++ " votes YES (" ++ voteWeight ++ " votes)").postln;
                     } {
@@ -337,12 +209,12 @@
                 };
             });
             
-            var consensus = yesVotes / totalVotes;
+            consensus = yesVotes / totalVotes;
             ~parliament.controlBuses.consensusLevel.set(consensus);
             ~parliament.controlBuses.totalVotes.set(totalVotes);
             
-            var result = if(consensus > 0.6) { "PASSED" } { "FAILED" };
-            ("🏛️ Vote Result: " ++ result ++ " (" ++ (consensus * 100).round(0.1) ++ "% consensus, " ++ totalVotes ++ " total votes)").postln;
+            result = if(consensus > 0.6) { "PASSED" } { "FAILED" };
+            ("🏛️ Vote Result: " ++ result ++ " (" ++ (consensus * 100).round ++ "% consensus, " ++ totalVotes ++ " total votes)").postln;
             
             consensus;
         };
@@ -385,51 +257,49 @@
         
         // Status reporting
         ~reportParliamentStatus = {
-            var states = ~getAgentStates.value;
-            
             "".postln;
             "🏛️ === PARLIAMENT OF ALL THINGS - STATUS REPORT ===".postln;
             ("Time: " ++ Date.localtime).postln;
             "".postln;
             
             "ACOUSTIC SPECIES:".postln;
-            states.acousticSpecies.do({ |agent|
+            ~parliament.agents.acousticSpecies.do({ |agent|
                 ("  " ++ agent.name ++ ": " ++ 
-                 if(agent.active) { "🟢 ACTIVE" } { "🔴 OFFLINE" } ++
+                 if(agent.synth.notNil) { "🟢 ACTIVE" } { "🔴 OFFLINE" } ++
                  " | " ++ agent.votes ++ " votes | " ++ 
                  (agent.presence * 100).round(0.1) ++ "% presence | " ++ agent.status).postln;
             });
             
             "".postln;
             "eDNA MONITORING SITES:".postln;
-            states.ednaSites.do({ |agent|
+            ~parliament.agents.ednaSites.do({ |agent|
                 ("  " ++ agent.name ++ ": " ++ 
-                 if(agent.active) { "🟢 MONITORING" } { "🔴 OFFLINE" } ++
+                 if(agent.synth.notNil) { "🟢 MONITORING" } { "🔴 OFFLINE" } ++
                  " | " ++ (agent.biodiversity * 100).round(0.1) ++ "% biodiversity | " ++
                  (agent.validation * 100).round(0.1) ++ "% validation").postln;
             });
             
             "".postln;
             "FUNGI NETWORKS:".postln;
-            states.fungiNetworks.do({ |agent|
+            ~parliament.agents.fungiNetworks.do({ |agent|
                 ("  " ++ agent.name ++ ": " ++ 
-                 if(agent.active) { "🟢 CONNECTED" } { "🔴 OFFLINE" } ++
+                 if(agent.synth.notNil) { "🟢 CONNECTED" } { "🔴 OFFLINE" } ++
                  " | " ++ agent.coverage ++ " km² coverage | " ++
                  (agent.connectivity * 100).round(0.1) ++ "% connectivity").postln;
             });
             
             "".postln;
             "AI CORE:".postln;
-            ("  " ++ states.aiCore.name ++ ": " ++ 
-             if(states.aiCore.active) { "🟢 ONLINE" } { "🔴 OFFLINE" } ++
-             " | " ++ (states.aiCore.consciousness * 100).round(0.1) ++ "% consciousness | " ++
-             states.aiCore.optimization ++ " optimization rate").postln;
+            ("  " ++ ~parliament.agents.aiCore[0].name ++ ": " ++ 
+             if(~parliament.agents.aiCore[0].synth.notNil) { "🟢 ONLINE" } { "🔴 OFFLINE" } ++
+             " | " ++ (~parliament.agents.aiCore[0].consciousness * 100).round(0.1) ++ "% consciousness | " ++
+             ~parliament.agents.aiCore[0].optimization ++ " optimization rate").postln;
             
             "".postln;
             "CONSENSUS STATUS:".postln;
-            ("  Democratic Consensus: " ++ (states.consensus.level * 100).round(0.1) ++ "%").postln;
-            ("  Total Voting Power: " ++ states.consensus.totalVotes ++ " votes").postln;
-            ("  Parliament Rotation: " ++ states.consensus.rotationSpeed ++ "x speed").postln;
+            ("  Democratic Consensus: " ++ (~parliament.controlBuses.consensusLevel.getSynchronous * 100).round(0.1) ++ "%").postln;
+            ("  Total Voting Power: " ++ ~parliament.controlBuses.totalVotes.getSynchronous ++ " votes").postln;
+            ("  Parliament Rotation: " ++ ~parliament.controlBuses.rotationSpeed.getSynchronous ++ "x speed").postln;
             
             "".postln;
             "=== END STATUS REPORT ===".postln;
@@ -441,7 +311,6 @@
         "  - Democratic voting simulation".postln;
         "  - Emergency response protocols".postln;
         "  - Status monitoring and reporting".postln;
-        "  - Parameter updates (GUI/OSC integration)".postln;
         "".postln;
         "Available functions:".postln;
         "  ~startParliament.value - Start all agents".postln;

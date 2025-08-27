@@ -1,7 +1,6 @@
 // Parliament of All Things - OSC Communication Handlers
 // External Control and Data Integration
-// Based on sonETH OSC architecture patterns
-// Current Date: 2025-08-26
+// Current Date: 2025-08-27
 
 (
 {
@@ -28,7 +27,9 @@
             parliamentRotation: OSCdef(\parliamentRotation, { |msg|
                 var rotationSpeed = msg[1].clip(0.1, 2.0);
                 ~parliament.controlBuses.rotationSpeed.set(rotationSpeed);
-                ~updateRotationSpeed.value(rotationSpeed);
+                if(~updateRotationSpeed.notNil) {
+                    ~updateRotationSpeed.value(rotationSpeed);
+                };
                 ("OSC: Parliament rotation speed: " ++ rotationSpeed ++ "x").postln;
             }, '/parliament/rotation'),
             
@@ -58,31 +59,6 @@
                 };
             }, '/agents/species/activity'),
             
-            speciesVote: OSCdef(\speciesVote, { |msg|
-                var speciesId = msg[1].clip(0, 4).asInteger;
-                var vote = msg[2]; // Vote value or action
-                
-                if(~parliament.agents.acousticSpecies[speciesId].notNil) {
-                    // Temporarily boost presence for voting
-                    var boostedPresence = (~parliament.agents.acousticSpecies[speciesId].presence * 1.2).min(1.0);
-                    if(~parliament.agents.acousticSpecies[speciesId].synth.notNil) {
-                        ~parliament.agents.acousticSpecies[speciesId].synth.set(\presence, boostedPresence);
-                    };
-                    
-                    // Reset after 2 seconds
-                    Task({
-                        2.wait;
-                        if(~parliament.agents.acousticSpecies[speciesId].synth.notNil) {
-                            ~parliament.agents.acousticSpecies[speciesId].synth.set(
-                                \presence, ~parliament.agents.acousticSpecies[speciesId].presence
-                            );
-                        };
-                    }).start;
-                    
-                    ("OSC: Species " ++ speciesId ++ " voted: " ++ vote).postln;
-                };
-            }, '/agents/species/vote'),
-            
             // eDNA Site controls
             ednaBiodiversity: OSCdef(\ednaBiodiversity, { |msg|
                 var siteId = msg[1].clip(0, 7).asInteger;
@@ -96,19 +72,6 @@
                     ("OSC: eDNA site " ++ siteId ++ " biodiversity: " ++ (biodiversity * 100).round(0.1) ++ "%").postln;
                 };
             }, '/agents/edna/biodiversity'),
-            
-            ednaValidation: OSCdef(\ednaValidation, { |msg|
-                var siteId = msg[1].clip(0, 7).asInteger;
-                var validation = msg[2].clip(0.0, 1.0);
-                
-                if(~parliament.agents.ednaSites[siteId].notNil) {
-                    ~parliament.agents.ednaSites[siteId].validation = validation;
-                    if(~parliament.agents.ednaSites[siteId].synth.notNil) {
-                        ~parliament.agents.ednaSites[siteId].synth.set(\validation, validation);
-                    };
-                    ("OSC: eDNA site " ++ siteId ++ " validation: " ++ (validation * 100).round(0.1) ++ "%").postln;
-                };
-            }, '/agents/edna/validation'),
             
             // Fungi Network controls
             fungiChemical: OSCdef(\fungiChemical, { |msg|
@@ -124,19 +87,6 @@
                 };
             }, '/agents/fungi/chemical'),
             
-            fungiConnectivity: OSCdef(\fungiConnectivity, { |msg|
-                var nodeId = msg[1].clip(0, 3).asInteger;
-                var connectivity = msg[2].clip(0.0, 1.0);
-                
-                if(~parliament.agents.fungiNetworks[nodeId].notNil) {
-                    ~parliament.agents.fungiNetworks[nodeId].connectivity = connectivity;
-                    if(~parliament.agents.fungiNetworks[nodeId].synth.notNil) {
-                        ~parliament.agents.fungiNetworks[nodeId].synth.set(\connectivity, connectivity);
-                    };
-                    ("OSC: Fungi node " ++ nodeId ++ " connectivity: " ++ (connectivity * 100).round(0.1) ++ "%").postln;
-                };
-            }, '/agents/fungi/connectivity'),
-            
             // AI Core controls
             aiConsciousness: OSCdef(\aiConsciousness, { |msg|
                 var consciousness = msg[1].clip(0.0, 1.0);
@@ -148,16 +98,6 @@
                 ("OSC: AI consciousness level: " ++ (consciousness * 100).round(0.1) ++ "%").postln;
             }, '/agents/ai/consciousness'),
             
-            aiOptimization: OSCdef(\aiOptimization, { |msg|
-                var optimization = msg[1].clip(0, 127).asInteger;
-                
-                ~parliament.controlBuses.aiOptimization.set(optimization);
-                if(~parliament.agents.aiCore[0].synth.notNil) {
-                    ~parliament.agents.aiCore[0].synth.set(\optimization, optimization);
-                };
-                ("OSC: AI optimization rate: " ++ optimization).postln;
-            }, '/agents/ai/optimization'),
-            
             // Master controls
             masterVolume: OSCdef(\masterVolume, { |msg|
                 var volume = msg[1].clip(0.0, 1.0);
@@ -167,34 +107,40 @@
             
             // Start/Stop parliament
             parliamentStart: OSCdef(\parliamentStart, { |msg|
-                ~startParliament.value;
+                if(~startParliament.notNil) {
+                    ~startParliament.value;
+                };
                 "OSC: Parliament started remotely".postln;
             }, '/parliament/start'),
             
             parliamentStop: OSCdef(\parliamentStop, { |msg|
-                ~stopParliament.value;
+                if(~stopParliament.notNil) {
+                    ~stopParliament.value;
+                };
                 "OSC: Parliament stopped remotely".postln;
             }, '/parliament/stop'),
+            
+            // Vote simulation
+            parliamentVote: OSCdef(\parliamentVote, { |msg|
+                if(~simulateVote.notNil) {
+                    ~simulateVote.value;
+                };
+                "OSC: Democratic vote triggered remotely".postln;
+            }, '/parliament/vote'),
             
             // Emergency consensus override
             emergencyConsensus: OSCdef(\emergencyConsensus, { |msg|
                 var emergency_level = msg[1].clip(0.0, 1.0);
                 
-                // Override consensus for emergency situations
-                ~parliament.controlBuses.consensusLevel.set(emergency_level);
-                
-                // Boost all agent activity for emergency response
-                ~parliament.agents.acousticSpecies.do({ |agent|
-                    if(agent.synth.notNil) {
-                        agent.synth.set(\presence, 1.0, \activity, 1.0);
-                    };
-                });
+                if(~triggerEmergencyResponse.notNil) {
+                    ~triggerEmergencyResponse.value(emergency_level);
+                };
                 
                 ("OSC: EMERGENCY CONSENSUS ACTIVATED - Level: " ++ (emergency_level * 100).round(0.1) ++ "%").postln;
             }, '/parliament/emergency')
         );
         
-        // OSC status and monitoring
+        // OSC status broadcasting
         ~parliament.osc.sendStatus = { |target_addr|
             var status_data = (
                 consensus: ~parliament.controlBuses.consensusLevel.getSynchronous,
@@ -297,15 +243,12 @@
             "    /parliament/rotation <float>", 
             "    /parliament/start",
             "    /parliament/stop",
+            "    /parliament/vote",
             "    /agents/species/presence <int> <float>",
             "    /agents/species/activity <int> <float>",
-            "    /agents/species/vote <int> <value>",
             "    /agents/edna/biodiversity <int> <float>",
-            "    /agents/edna/validation <int> <float>",
             "    /agents/fungi/chemical <int> <float>",
-            "    /agents/fungi/connectivity <int> <float>",
             "    /agents/ai/consciousness <float>",
-            "    /agents/ai/optimization <int>",
             "    /parliament/emergency <float>",
             "",
             "  Test with: ~testParliamentOSC.value"

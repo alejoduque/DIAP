@@ -1,6 +1,6 @@
 // Parliament of All Things - Effect Synthesis Definitions
 // Audio Processing and Mixing for Democratic Synthesis
-// Current Date: 2025-08-26
+// Current Date: 2025-08-27
 
 (
 {
@@ -57,6 +57,59 @@
             
             Out.ar(out, sig);
         }).add;
+        
+        // Effect processor management
+        ~startEffectProcessors = {
+            // Reverb processor
+            ~parliament.reverbProcessor = Synth(\freeverb2, [
+                \in, ~parliament.audioBuses.reverb.index,
+                \out, ~parliament.audioBuses.main.index,
+                \mix, 0.3,
+                \room, 0.7,
+                \damp, 0.5
+            ], addAction: \addToTail);
+            
+            // Delay processor
+            ~parliament.delayProcessor = Synth(\delay1, [
+                \in, ~parliament.audioBuses.delay.index,
+                \out, ~parliament.audioBuses.main.index,
+                \maxdelaytime, 2.0,
+                \delaytime, 0.3,
+                \decaytime, 2.0,
+                \mul, 0.2
+            ], addAction: \addToTail);
+            
+            // Main mixer
+            ~parliament.mainMixer = Synth(\mixer, [
+                \in1, ~parliament.audioBuses.acousticSpecies.index,
+                \in2, ~parliament.audioBuses.ednaSites.index,
+                \in3, ~parliament.audioBuses.fungiNetworks.index,
+                \in4, ~parliament.audioBuses.aiCore.index,
+                \out, ~parliament.audioBuses.main.index,
+                \amp1, 0.8, \amp2, 0.6, \amp3, 0.7, \amp4, 0.5
+            ], addAction: \addToTail);
+            
+            // Master output
+            ~parliament.masterOutput = Synth(\masterOut, [
+                \in, ~parliament.audioBuses.main.index,
+                \out, 0,
+                \amp, 0.7
+            ], addAction: \addToTail);
+        };
+        
+        ~stopEffectProcessors = {
+            [~parliament.reverbProcessor, ~parliament.delayProcessor, 
+             ~parliament.mainMixer, ~parliament.masterOutput].do({ |synth|
+                if(synth.notNil) {
+                    synth.free;
+                };
+            });
+            
+            ~parliament.reverbProcessor = nil;
+            ~parliament.delayProcessor = nil;
+            ~parliament.mainMixer = nil;
+            ~parliament.masterOutput = nil;
+        };
         
         "Effect SynthDefs loaded: FreeVerb2, Delay, Mixer, MasterOut".postln;
         

@@ -1,7 +1,6 @@
 // Parliament of All Things - Temporal Synchronization Engine
 // Multi-Agent Temporal Coordination System
-// Based on sonETH beat engine patterns  
-// Current Date: 2025-08-26
+// Current Date: 2025-08-27
 
 (
 {
@@ -16,31 +15,31 @@
         // Master clock based on 120-second parliament rotation
         ~parliament.temporal.masterClock = TempoClock(120/60); // 0.5 Hz base frequency
         
-        // Agent-specific temporal patterns (matching SVG timing)
+        // Agent-specific temporal patterns
         ~parliament.temporal.cycles = (
             // Parliament rotation (2 minutes)
-            parliament: (duration: 120, phase: 0, clock: nil),
+            parliament: (duration: 120, phase: 0),
             
             // AI consciousness pulse (3 seconds) 
-            aiCore: (duration: 3, phase: 0, clock: nil),
+            aiCore: (duration: 3, phase: 0),
             
             // Fungi chemical signals (6 seconds)
-            fungi: (duration: 6, phase: 0, clock: nil),
+            fungi: (duration: 6, phase: 0),
             
             // eDNA validation cycles (8 seconds for monthly simulation)
-            edna: (duration: 8, phase: 0, clock: nil),
+            edna: (duration: 8, phase: 0),
             
             // Acoustic species variable timing (4-7 seconds)
             acousticSpecies: [
-                (duration: 4, phase: 0, clock: nil),   // Ara macao
-                (duration: 4.5, phase: 0, clock: nil), // Atlapetes
-                (duration: 5, phase: 0, clock: nil),   // Cecropia  
-                (duration: 5.5, phase: 0, clock: nil), // Alouatta
-                (duration: 6, phase: 0, clock: nil)    // Tinamus
+                (duration: 4, phase: 0),   // Ara macao
+                (duration: 4.5, phase: 0), // Atlapetes
+                (duration: 5, phase: 0),   // Cecropia  
+                (duration: 5.5, phase: 0), // Alouatta
+                (duration: 6, phase: 0)    // Tinamus
             ],
             
             // Consensus building rhythm
-            consensus: (duration: 15, phase: 0, clock: nil)
+            consensus: (duration: 15, phase: 0)
         );
         
         // Phase calculation functions
@@ -94,28 +93,11 @@
             // Consensus building waves
             consensusWave: {
                 var phase = ~calculatePhase.value(\consensus);
-                var consensus_level = ~parliament.controlBuses.consensusLevel.getSynchronous ? 0.5;
-                var stability = consensus_level.linlin(0, 1, 0.3, 0.95); // More stable with higher consensus
+                var consensus_level = ~parliament.controlBuses.consensusLevel.getSynchronous;
+                var stability = consensus_level.linlin(0, 1, 0.3, 0.95);
                 sin(phase * 2 * pi) * (1 - stability) + stability;
             }
         );
-        
-        // Temporal synchronization functions
-        ~synchronizeAgents = {
-            // Update all temporal phases
-            ~parliament.temporal.cycles.keysValuesDo({ |cycleName, cycle|
-                if(cycleName == \acousticSpecies) {
-                    cycle.do({ |speciesCycle, i|
-                        speciesCycle.phase = ~calculatePhase.value(\acousticSpecies, i);
-                    });
-                } {
-                    cycle.phase = ~calculatePhase.value(cycleName);
-                };
-            });
-            
-            // Apply temporal modulations to active synths
-            ~applyTemporalModulations.value;
-        };
         
         // Apply temporal modulations to synthesis parameters
         ~applyTemporalModulations = {
@@ -123,18 +105,14 @@
             // AI Core temporal modulation
             if(~parliament.agents.aiCore[0].synth.notNil) {
                 var consciousness_mod = ~parliament.temporal.modulators.aiConsciousness.value;
-                var base_consciousness = ~parliament.controlBuses.aiConsciousness.getSynchronous;
-                ~parliament.agents.aiCore[0].synth.set(
-                    \consciousness, base_consciousness * consciousness_mod
-                );
+                ~parliament.controlBuses.aiConsciousness.set(consciousness_mod);
             };
             
             // Fungi Networks temporal modulation
             ~parliament.agents.fungiNetworks.do({ |agent, i|
                 if(agent.synth.notNil) {
                     var chemical_mod = ~parliament.temporal.modulators.fungiChemical.value(i);
-                    var base_chemical = ~parliament.controlBuses.fungiChemical.getSynchronous;
-                    agent.synth.set(\chemical, base_chemical * chemical_mod);
+                    ~parliament.controlBuses.fungiChemical.set(chemical_mod);
                 };
             });
             
@@ -142,8 +120,7 @@
             ~parliament.agents.ednaSites.do({ |agent, i|
                 if(agent.synth.notNil) {
                     var validation_mod = ~parliament.temporal.modulators.ednaValidation.value(i);
-                    var base_validation = ~parliament.controlBuses.ednaValidation.getSynchronous;
-                    agent.synth.set(\validation, base_validation * validation_mod);
+                    ~parliament.controlBuses.ednaValidation.set(validation_mod);
                 };
             });
             
@@ -151,15 +128,13 @@
             ~parliament.agents.acousticSpecies.do({ |agent, i|
                 if(agent.synth.notNil) {
                     var activity_mod = ~parliament.temporal.modulators.acousticActivity.value(i);
-                    var base_presence = ~parliament.controlBuses.acousticPresence.getSynchronous;
-                    agent.synth.set(\presence, base_presence * activity_mod);
+                    ~parliament.controlBuses.acousticPresence.set(activity_mod);
                 };
             });
             
             // Consensus Engine temporal modulation
             if(~parliament.consensusEngine.notNil) {
                 var consensus_wave = ~parliament.temporal.modulators.consensusWave.value;
-                ~parliament.consensusEngine.set(\consensusLevel, consensus_wave);
                 ~parliament.controlBuses.consensusLevel.set(consensus_wave);
             };
         };
@@ -219,8 +194,8 @@
             "Fungi networks: Spore release event triggered".postln;
             ~parliament.agents.fungiNetworks.do({ |agent|
                 if(agent.synth.notNil) {
-                    // Trigger spore release in SynthDef
-                    agent.synth.set(\coverage, agent.coverage * rrand(1.1, 1.3));
+                    // Trigger spore release effects
+                    agent.coverage = agent.coverage * rrand(1.1, 1.3);
                 };
             });
         };
@@ -232,7 +207,6 @@
                     // Update biodiversity with small variations
                     var new_biodiversity = (agent.biodiversity + rrand(-0.02, 0.02)).clip(0.0, 1.0);
                     agent.biodiversity = new_biodiversity;
-                    agent.synth.set(\biodiversity, new_biodiversity);
                 };
             });
         };
@@ -244,7 +218,7 @@
             // Start main synchronization routine
             ~parliament.temporal.syncRoutine = Routine({
                 loop {
-                    ~synchronizeAgents.value;
+                    ~applyTemporalModulations.value;
                     0.1.wait; // 10Hz synchronization rate
                 };
             }).play(~parliament.temporal.masterClock);
@@ -296,6 +270,7 @@
         "  - eDNA Sites: 8-second validation cycles".postln;
         "  - Acoustic Species: 4-7 second variable activity".postln;
         "  - Consensus Engine: 15-second democratic evaluation".postln;
+        ~parliament.status.temporal = true;
         
     } {
         |error|
